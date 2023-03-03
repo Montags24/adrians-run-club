@@ -1,0 +1,101 @@
+/* Top container */
+#top-section {
+    background-color: #4CD7D0;
+    height: 90vh;
+    overflow: auto;
+}
+
+.text-montserrat {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.text-pacifico {
+    font-family: 'Pacifico', cursive;
+}
+
+#page-name {
+    text-align: center;
+    margin-top: 20%;
+    font-size: 11vh;
+}
+
+.page-desc {
+    font-size: 3vh;
+}
+
+.fa-person-running {
+    margin: 0px 50px;
+    color: #F8D210;
+    border-color: black;
+}
+.btn-submit {
+    width: 130px;
+    margin: 50px;
+}
+
+.btn-submit:hover {
+    background-color: #F8D210;
+}
+
+.center-text {
+    text-align: center;
+}
+
+
+
+/* Middle container */
+#middle-section {
+    background-color: #FAE8E0;
+    padding:20px;
+}
+
+.card {
+    width: 18rem; 
+    margin: auto;
+}
+
+
+/* Bottom container */
+#bottom-section {
+    background-color: #4CD7D0;
+    padding-bottom: 40px;
+}
+
+.circle-singleline {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    font-size: 24px;
+    line-height: 20px;
+    text-align: center; 
+    padding: 20px 0px;
+    background: #1b7e07;
+    color: #fff;
+}
+
+/* Testimonials */
+#testimonials {
+    background-color: #FAE8E0;
+    height: 60vh;
+    padding: 20px 0 90px;
+}
+
+.testimonial-img {
+    border-radius: 90%;
+}
+
+.testimonial-text {
+    font-size: 3vh;
+    margin: 60px 0 30px;
+    font-weight: bold;
+}
+
+.testimonial-name {
+   height:50%;
+}
+
+/* Contact me page */
+#contact-me {
+    background-color: #4CD7D0;
+    padding: 20px;
+}

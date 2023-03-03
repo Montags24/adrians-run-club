@@ -54,6 +54,10 @@
     margin: auto;
 }
 
+.carousel-control-next,
+.carousel-control-prev /*, .carousel-indicators */ {
+    filter: invert(100%);
+}
 
 /* Bottom container */
 #bottom-section {
@@ -98,4 +102,8 @@
 #contact-me {
     background-color: #4CD7D0;
     padding: 20px;
+}
+
+.nav-link {
+    color: #000000;
 }

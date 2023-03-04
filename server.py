@@ -1,20 +1,23 @@
 from flask import Flask, render_template, request
+from dotenv import load_dotenv
 import smtplib
-import requests
+import os
 
 
 app = Flask(__name__)
-MY_EMAIL = "adrianmontagu24@gmail.com"
-MY_PASSWORD = "lppcaedlozkfaebz"
+load_dotenv()
+GMAIL_EMAIL = os.getenv("GMAIL_EMAIL")
+MY_PASSWORD = os.getenv("GMAIL_PASSWORD")
+EMAIL = os.getenv("EMAIL")
 
 
 def send_email(name, number, email, message):
     with smtplib.SMTP("smtp.gmail.com") as connection:
         connection.starttls()
-        connection.login(user=MY_EMAIL, password=MY_PASSWORD)
+        connection.login(user=GMAIL_EMAIL, password=MY_PASSWORD)
         connection.sendmail(
-            from_addr=MY_EMAIL,
-            to_addrs="adrianmontagu@hotmail.co.uk",
+            from_addr=GMAIL_EMAIL,
+            to_addrs=EMAIL,
             msg=f"\n\nName: {name}\nPhone number: {number}\nEmail: {email}\nMessage: {message}"
         )
 

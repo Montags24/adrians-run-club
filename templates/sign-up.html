@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;900&family=Pacifico&display=swap"
+	      rel="stylesheet">
+	<!-- Bootstrap CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+	      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<link rel="stylesheet" href="\static\css\styles.css">
+	<!--	<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">-->
+
+	<title>Adrian's Run Club</title>
+</head>
+
+<body>
+
+<section id="navbar">
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div class="container">
+			<a class="navbar-brand" href="#">Adrian's Run Club</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+			        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="{{ url_for('home')  }}">Home</a>
+					</li>
+					<li class="nav-item">
+					<li class="nav-item">
+						<a class="nav-link" href="#">Sign Up</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+</section>
+
+
+<section id="top-section" style="height:80vh">
+	<div class="container">
+		<div class="row justify-content-center">
+			<h1 id="sign-up" class="text-pacifico" style="font-size:8vh">Choose your shoe</h1>
+			<div class="col-md-10 col-sm-6 mt-3">
+				<form method="POST">
+					<div class="row justify-content-center">
+						<div class="col-md-3 col-sm-4 col-xs-6 my-3">
+							<select name="shoe" class="form-select" aria-label="Default select example">
+								<option selected>Select a shoe</option>
+								<option value="Saucony">Saucony</option>
+								<option value="Nike">Nike</option>
+								<option value="3">Three</option>
+							</select>
+						</div>
+						<div class="col-md-3 col-sm-4 col-xs-6 my-3">
+							<select name="size" class="form-select" aria-label="Default select example">
+								<option selected>Select a size</option>
+								<option value="10">10</option>
+								<option value="10.5">10.5</option>
+								<option value="3">Three</option>
+							</select>
+						</div>
+						<div class="col-md-1 col-sm-4 col-xs-6 my-3">
+							<button type="submit" id="form-submit" name="form-submit" value="submit" class="btn btn-warning btn-rounded text-montserrat"
+							        style="font-weight: bold;">
+								Select
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="row justify-content-center">
+				{% for shoe in shoes %}
+				<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 text-center my-2">
+					<div class="card p-3 shadow-lg">
+						<img src="https://cdn.runrepeat.com/i/saucony/37960/saucony-endorphin-speed-3-85-white-blck-vizi-7e12-380.jpg"
+						     class="card-img-top" alt="...">
+						<div class="card-body text-center">
+							<div class="row">
+								<div class="col-8">
+									<h5 class="shoe-name">{{ shoe[0] }}</h5>
+								</div>
+								<div class="col-4">
+									<div class="circle-singleline">80</div>
+								</div>
+							</div>
+						</div>
+						<div class="row text-center">
+							<div class="col-4">
+								<p class="shoe-price">Price: £150</p>
+							</div>
+							<div class="col-4">
+								<p class="shoe-discount">Discount: £150</p>
+							</div>
+							<div class="col-4">
+								<a href="https://www.sportsshoes.com/products/saucony/z/z/shoes/" class="shoe-link"><i
+										class="fa-solid fa-arrow-up-right-from-square fa-2x"></i></a>
+							</div>
+						</div>
+							<div class="row">
+								<form action="" method="POST">
+									<button type="submit" id="delete-btn" name="delete-btn" value="{{  loop.index  }}"  class="btn btn-danger">Delete</button>
+								</form>
+						</div>
+					</div>
+				</div>
+				{% endfor%}
+			</div>
+		</div>
+	</div>
+</section>
+
+<section id="#" style="height:30vh">
+	<div class="container">
+		<div class="row justify-content-center text-center">
+			<h1 id="#" class="text-pacifico" style="font-size:8vh">Get alerts via email</h1>
+			<form>
+				<div class="my-5 d-flex justify-content-center">
+					<div class="form-floating">
+						<input name="email" type="email" class="form-control" id="email"
+						       placeholder="name@example.com" required style="width: 350px;">
+						<label for="email">Email address</label>
+					</div>
+				</div>
+				<button type="submit" class="btn btn-warning btn-rounded text-montserrat"
+				        style="font-weight: bold;"><a href="#"
+				                                      style="color: black; text-decoration: none;">Sign Up</a>
+				</button>
+			</form>
+		</div>
+	</div>
+</section>
+
+<section>
+	<div class="container">
+		<footer class="py-3 my-4">
+			<ul class="nav justify-content-center border-bottom pb-3 mb-3">
+				<li class="nav-item"><a href="#" class="nav-link px-2 text-montserrat">Home</a></li>
+				<li class="nav-item"><a href="#top-section" class="nav-link px-2 text-montserrat">About</a></li>
+				<li class="nav-item"><a href="#middle-section" class="nav-link px-2 text-montserrat">Deals</a></li>
+				<li class="nav-item"><a href="#" class="nav-link px-2 text-montserrat">Contact</a></li>
+			</ul>
+			<p class="text-center text-montserrat">© 2023 Adrian's Run Club </p>
+		</footer>
+	</div>
+</section>
+
+
+<!-- Font is awesome -->
+<script src="https://kit.fontawesome.com/1f8ce701db.js" crossorigin="anonymous"></script>
+<!-- Optional JavaScript; choose one of the two! -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

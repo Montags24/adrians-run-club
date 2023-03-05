@@ -19,6 +19,12 @@
     font-size: 11vh;
 }
 
+#sign-up {
+    text-align: center;
+    margin-top: 5%;
+    font-size: 11vh;
+}
+
 .page-desc {
     font-size: 3vh;
 }
@@ -80,7 +86,7 @@
 /* Testimonials */
 #testimonials {
     background-color: #FAE8E0;
-    height: 60vh;
+
     padding: 20px 0 90px;
 }
 

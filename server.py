@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 import smtplib
 import os
 
-
 app = Flask(__name__)
 load_dotenv()
 GMAIL_EMAIL = os.getenv("GMAIL_EMAIL")
@@ -36,9 +35,25 @@ def home():
         return render_template("message-success.html")
 
 
-@app.route("/signup")
+shoes = []
+
+
+@app.route("/signup", methods=["GET", "POST"])
 def sign_up():
-    return ""
+    global shoes
+    if request.method == "POST":
+        if "form-submit" in request.form:
+            shoe = request.form["shoe"]
+            size = request.form["size"]
+            shoes.append([shoe, size])
+        elif "delete-btn" in request.form:
+            number = int(request.form["delete-btn"])
+            print(number)
+            if len(shoes) > 0:
+                del shoes[number - 1]
+        return render_template("sign-up.html", shoes=shoes)
+    else:
+        return render_template("sign-up.html")
 
 
 if __name__ == "__main__":

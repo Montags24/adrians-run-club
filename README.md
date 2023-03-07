@@ -13,8 +13,8 @@ Adrian's Run Club will scrape the website RunRepeat for its competitive shoes an
 - Selenium and Beautiful Soup to scrape data from RunRepeat
 
 ## Problems faced
-# Web scraping
+### Web scraping
 - Having built a web scraper using Beautiful Soup and Selenium, I was able to parse through the HTML on RunRepeat to get the data that I wanted, shoe name, price, discount, link to the image and link to the deal if on sale. However, after consulting the robots.txt extension, I found out that many of the pages that I wanted to scrape were disallowed by the site. This led me to wonder if the site was using an API to retrieve its data. By using Chrome's developer tools, and looking at the requests the site was making, I was able to figure out that they were using an API, and passing through specific numbers as filters based on the shoes size, use (road, trail, track etc.), whether the shoe is used for daily use/competition and so on. This I found to be much faster and more reliable than webscraping, so I incorprated their API into the design of my app. 
-# Relationship mapping within database
+### Relationship mapping within database
 - Got stuck on this for hours. My database is made up of two sheets. The first sheet (Brand) contains all the names of the shoes, whilst the second (Shoe) contains all the information about the shoe (size, price, discount, image link, deal link). By having the Brand sheet at as the parent and the Shoe sheet as the child, I would be able to relate shoe data to the name of the shoe. Using SQLalchemy, to create a table you base it off a Class, in this case I had a Brand and Shoe class.
 

@@ -2,6 +2,7 @@ import requests
 
 URL = "https://api.runrepeat.com/get-documents"
 
+# Create dictionary that stores key:value pairs of shoe size to headers used in RunRepeat's API
 sizes = {
     6: 1704,
     6.5: 1705,
@@ -35,20 +36,24 @@ def change_parameters(size, page, page_range):
     return size_parameters
 
 
-shoe_data = []
-for i in range(3):
-    parameters = change_parameters(10, i + 1, 30 * i)
-    response = requests.get(URL, params=parameters)
-    data = response.json()
-    for product in data["products"]:
-        shoe_data.append(
-            {product["name"]: {
-                "price": product["msrp"],
-                "score": product["score"],
-                "discount": product["min_price"],
-                "img-link": product["default_color"]["image"]["url"].replace("{SIZE}", "600"),
-                "deal-link": product["deals"][0]["affiliate_link"]
-            }
-            }
-        )
-print(shoe_data[0].keys())
+def retrieve_data():
+    """Function that uses RunRepeat API to return data on competitive running shoes"""
+    shoe_data = []
+    for size in sizes:
+        # Run loop 3 times to get up to 90 shoes worth of data
+        for i in range(3):
+            parameters = change_parameters(size, i + 1, 30 * i)
+            response = requests.get(URL, params=parameters)
+            data = response.json()
+            for product in data["products"]:
+                shoe_data.append(
+                    [product["name"], f"{size}", {
+                        "price": product["msrp"],
+                        "discount": product["min_price"],
+                        "score": product["score"],
+                        "img_link": product["default_color"]["image"]["url"].replace("{SIZE}", "600"),
+                        "deal_link": product["deals"][0]["affiliate_link"]
+                    }
+                    ]
+                )
+    return shoe_data

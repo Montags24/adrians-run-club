@@ -76,6 +76,12 @@ def does_model_exist(shoe_model):
         return exist
 
 
+def return_shoes():
+    with app.app_context():
+        all_shoes = Brand.query.all()
+        return all_shoes
+
+
 def does_shoe_exist(size, brand_id):
     """Checks if child class exists"""
     with app.app_context():
@@ -134,5 +140,5 @@ def update_database():
 
 
 # create_table()
-update_database()
+# update_database()
 

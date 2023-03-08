@@ -1,9 +1,14 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
+from flask_session import Session
 from dotenv import load_dotenv
+from database import get_brand_id, get_shoe_data
 import smtplib
 import os
 
 app = Flask(__name__)
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
 load_dotenv()
 GMAIL_EMAIL = os.getenv("GMAIL_EMAIL")
 MY_PASSWORD = os.getenv("GMAIL_PASSWORD")
@@ -35,23 +40,24 @@ def home():
         return render_template("message-success.html")
 
 
-shoes = []
-
-
 @app.route("/signup", methods=["GET", "POST"])
 def sign_up():
-    global shoes
     if request.method == "POST":
         if "form-submit" in request.form:
-            shoe = request.form["shoe"]
-            size = request.form["size"]
-            shoes.append([shoe, size])
+            brand = request.form["shoe"]
+            size = float(request.form["size"])
+            if "cart" not in session:
+                session["cart"] = []
+            cart_list = session["cart"]
+            brand_id = get_brand_id(brand_name=brand)
+            shoe_data = get_shoe_data(brand_id=brand_id, shoe_size=size)
+            cart_list.append({"name": shoe_data.name})
         elif "delete-btn" in request.form:
             number = int(request.form["delete-btn"])
             print(number)
-            if len(shoes) > 0:
-                del shoes[number - 1]
-        return render_template("sign-up.html", shoes=shoes)
+            if len(session["cart"]) > 0:
+                del session["cart"][number - 1]
+        return render_template("sign-up.html", shoes=session["cart"])
     else:
         return render_template("sign-up.html")
 

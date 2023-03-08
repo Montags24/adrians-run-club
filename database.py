@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from api_requests import retrieve_data
+
 app = Flask(__name__)
 
 # Create database
@@ -88,45 +89,50 @@ def does_shoe_exist(size, brand_id):
 def update_database():
     # Get data from api_requests module
     shoe_list = retrieve_data()
-    # Loop through data and store variable names
-    for shoe in shoe_list:
-        name = shoe[0]
-        size = shoe[1]
-        price = shoe[2]["price"]
-        discount = shoe[2]["discount"]
-        score = shoe[2]["score"]
-        img_link = shoe[2]["img_link"]
-        deal_link = shoe[2]["deal_link"]
-        # Check if shoe model exists in brand table
-        if does_model_exist(name):
-            # Check if shoe data exists in shoe table
-            brand_id = get_brand_id(name)
-            shoe = Shoe(size=size, price=price, discount=discount, score=score, img_link=img_link, deal_link=deal_link,
-                        brand_id=brand_id)
-            if does_shoe_exist(size, brand_id):
-                # Get shoe id
-                shoe_id = get_shoe_id(size, brand_id)
-                # Find shoe entry based off unique id
-                shoe_update = Shoe.query.filter(Shoe.brand_id.like(shoe_id).first())
-                # Update shoe entry based off unique id
-                shoe_update.size = size
-                shoe_update.price = price
-                shoe_update.discount = discount
-                shoe_update.score = score
-                shoe_update.img_link = img_link
-                shoe_update.deal_link = deal_link
-                db.session.commit()
+    with app.app_context():
+        # Loop through data and store variable names
+        for shoe in shoe_list:
+            name = shoe[0]
+            size = float(shoe[1])
+            price = shoe[2]["price"]
+            discount = shoe[2]["discount"]
+            score = shoe[2]["score"]
+            img_link = shoe[2]["img_link"]
+            deal_link = shoe[2]["deal_link"]
+            # Check if shoe model exists in brand table
+            if does_model_exist(name):
+                # Check if shoe data exists in shoe table
+                brand_id = get_brand_id(name)
+                shoe = Shoe(size=size, price=price, discount=discount, score=score, img_link=img_link,
+                            deal_link=deal_link, brand_id=brand_id)
+                if does_shoe_exist(size, brand_id):
+                    # Get shoe id
+                    shoe_id = get_shoe_id(size=size, brand_id=brand_id)
+                    # Find shoe entry based off unique id
+                    shoe_update = Shoe.query.filter(Shoe.id.like(shoe_id)).first()
+                    # shoe_update = Shoe.query.filter(Shoe.id.like(shoe_id).first())
+                    # Update shoe entry based off unique id
+                    shoe_update.size = size
+                    shoe_update.price = price
+                    shoe_update.discount = discount
+                    shoe_update.score = score
+                    shoe_update.img_link = img_link
+                    shoe_update.deal_link = deal_link
+                    db.session.commit()
+                else:
+                    # if shoe does not exist, add row
+                    add_row(shoe)
             else:
-                # if shoe does not exist, add row
-                print("I am here")
+                # If brand does not exist, add row
+                brand = Brand(name=name)
+                add_row(brand)
+                brand_id = get_brand_id(name)
+                shoe = Shoe(size=size, price=price, discount=discount, score=score, img_link=img_link,
+                            deal_link=deal_link,
+                            brand_id=brand_id)
                 add_row(shoe)
-        else:
-            # If brand does not exist, add row
-            brand = Brand(name=name)
-            add_row(brand)
-            brand_id = get_brand_id(name)
-            shoe = Shoe(size=size, price=price, discount=discount, score=score, img_link=img_link, deal_link=deal_link,
-                        brand_id=brand_id)
-            add_row(shoe)
 
+
+# create_table()
 update_database()
+

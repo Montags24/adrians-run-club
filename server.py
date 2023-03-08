@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session
 from flask_session import Session
 from dotenv import load_dotenv
-from database import get_brand_id, get_shoe_data
+from database import get_brand_id, get_shoe_data, return_shoes
 import smtplib
 import os
 
@@ -43,6 +43,7 @@ def home():
 @app.route("/signup", methods=["GET", "POST"])
 def sign_up():
     if request.method == "POST":
+        all_shoes = return_shoes()
         if "form-submit" in request.form:
             brand = request.form["shoe"]
             size = float(request.form["size"])
@@ -51,15 +52,16 @@ def sign_up():
             cart_list = session["cart"]
             brand_id = get_brand_id(brand_name=brand)
             shoe_data = get_shoe_data(brand_id=brand_id, shoe_size=size)
-            cart_list.append({"name": shoe_data.name})
+            cart_list.append({"name": brand})
         elif "delete-btn" in request.form:
             number = int(request.form["delete-btn"])
             print(number)
             if len(session["cart"]) > 0:
                 del session["cart"][number - 1]
-        return render_template("sign-up.html", shoes=session["cart"])
+        return render_template("sign-up.html", shoes=session["cart"], all_shoes=all_shoes)
     else:
-        return render_template("sign-up.html")
+        all_shoes = return_shoes()
+        return render_template("sign-up.html", all_shoes=all_shoes)
 
 
 if __name__ == "__main__":

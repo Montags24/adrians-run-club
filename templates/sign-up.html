@@ -55,9 +55,9 @@
 						<div class="col-md-3 col-sm-4 col-xs-6 my-3">
 							<select name="shoe" class="form-select" aria-label="Default select example">
 								<option selected>Select a shoe</option>
-								<option value="Saucony">Saucony Endorphin Speed 3</option>
-								<option value="Nike">Nike</option>
-								<option value="3">Three</option>
+								{%  for shoe in all_shoes:  %}
+								<option value="{{  shoe.name  }}">{{  shoe.name  }}</option>
+								{%  endfor  %}
 							</select>
 						</div>
 						<div class="col-md-3 col-sm-4 col-xs-6 my-3">

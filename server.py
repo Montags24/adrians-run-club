@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session
 from flask_session import Session
 from dotenv import load_dotenv
 from database import get_brand_id, get_shoe_data, return_shoes
+from api_requests import sizes
 import smtplib
 import os
 
@@ -43,25 +44,34 @@ def home():
 @app.route("/signup", methods=["GET", "POST"])
 def sign_up():
     if request.method == "POST":
+        # Get all shoe brand names in alphabetical order
         all_shoes = return_shoes()
         if "form-submit" in request.form:
             brand = request.form["shoe"]
             size = float(request.form["size"])
+            # Create session
             if "cart" not in session:
                 session["cart"] = []
             cart_list = session["cart"]
             brand_id = get_brand_id(brand_name=brand)
             shoe_data = get_shoe_data(brand_id=brand_id, shoe_size=size)
-            cart_list.append({"name": brand})
+            if shoe_data is not None:
+                cart_list.append({
+                    "name": brand,
+                    "size": size,
+                    "score": shoe_data.score,
+                    "discount": shoe_data.discount,
+                    "img_link": shoe_data.img_link,
+                    "deal_link": shoe_data.deal_link,
+                })
         elif "delete-btn" in request.form:
             number = int(request.form["delete-btn"])
-            print(number)
             if len(session["cart"]) > 0:
                 del session["cart"][number - 1]
-        return render_template("sign-up.html", shoes=session["cart"], all_shoes=all_shoes)
+        return render_template("sign-up.html", shoes=session["cart"], all_shoes=all_shoes, sizes=sizes)
     else:
         all_shoes = return_shoes()
-        return render_template("sign-up.html", all_shoes=all_shoes)
+        return render_template("sign-up.html", all_shoes=all_shoes, sizes=sizes)
 
 
 if __name__ == "__main__":

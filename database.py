@@ -78,7 +78,8 @@ def does_model_exist(shoe_model):
 
 def return_shoes():
     with app.app_context():
-        all_shoes = Brand.query.all()
+        shoe_brand_data = Brand.query.all()
+        all_shoes = sorted([shoe.name for shoe in shoe_brand_data])
         return all_shoes
 
 
@@ -141,4 +142,4 @@ def update_database():
 
 # create_table()
 # update_database()
-
+# return_shoes()

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session
 from flask_session import Session
 from dotenv import load_dotenv
-from database import get_brand_id, get_shoe_data, return_shoes
+from database import get_brand_id, get_shoe_data, return_shoes, return_shoe_names
 from api_requests import sizes
 import smtplib
 import os
@@ -30,7 +30,8 @@ def send_email(name, number, email, message):
 @app.route("/", methods=["GET", "POST"])
 def home():
     if request.method == "GET":
-        return render_template("home.html")
+        shoes = return_shoes()
+        return render_template("home.html", shoes=shoes)
     else:
         name = request.form["name"]
         phone_number = request.form["phone-number"]
@@ -45,7 +46,7 @@ def home():
 def sign_up():
     if request.method == "POST":
         # Get all shoe brand names in alphabetical order
-        all_shoes = return_shoes()
+        all_shoes = return_shoe_names()
         if "form-submit" in request.form:
             brand = request.form["shoe"]
             size = float(request.form["size"])
@@ -70,7 +71,7 @@ def sign_up():
                 del session["cart"][number - 1]
         return render_template("sign-up.html", shoes=session["cart"], all_shoes=all_shoes, sizes=sizes)
     else:
-        all_shoes = return_shoes()
+        all_shoes = return_shoe_names()
         return render_template("sign-up.html", all_shoes=all_shoes, sizes=sizes)
 
 

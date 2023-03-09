@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from api_requests import retrieve_data
+from random import choice
 
 app = Flask(__name__)
 
@@ -76,11 +77,21 @@ def does_model_exist(shoe_model):
         return exist
 
 
-def return_shoes():
+def return_shoe_names():
     with app.app_context():
         shoe_brand_data = Brand.query.all()
         all_shoes = sorted([shoe.name for shoe in shoe_brand_data])
         return all_shoes
+
+
+def return_shoes():
+    """Return 6 random shoes with data for home page"""
+    with app.app_context():
+        shoe_data = Shoe.query.filter_by(size=10.0).all()
+        shoe_list = [choice(shoe_data) for _ in range(6)]
+        shoe_names = [Brand.query.filter(Brand.id.like(shoe.brand_id)).first() for shoe in shoe_list]
+        zipped_list = list(zip(shoe_names, shoe_list))
+        return zipped_list
 
 
 def does_shoe_exist(size, brand_id):

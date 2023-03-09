@@ -2,15 +2,12 @@ import requests
 
 URL = "https://api.runrepeat.com/get-documents"
 
-
+# Create dictionary that stores key:value pairs of shoe size to headers used in RunRepeat's API
 # UK sizes
 min_size = 6
 max_size = 13.5
-# RunRepeat size conversion
 run_repeat_start_size = 1698 + min_size
-# Create dictionary that stores key:value pairs of shoe size to headers used in RunRepeat's API
 sizes = {size*0.5: run_repeat_start_size + i for i, size in enumerate(range(min_size*2, int(max_size*2)))}
-
 
 def change_parameters(size, page, page_range):
     size_parameters = {

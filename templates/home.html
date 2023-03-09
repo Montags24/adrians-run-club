@@ -116,35 +116,40 @@
 <section id="bottom-section">
 	<div class="container">
 		<div class="row text-center">
-			<h1 class="my-4 text-montserrat">Current Deals</h1>
+			<h1 class="my-4 text-montserrat">Current Deals*</h1>
+			{% for shoe in shoes %}
 			<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 text-center my-2">
 				<div class="card p-3 shadow-lg">
-					<img src="https://cdn.runrepeat.com/i/saucony/37960/saucony-endorphin-speed-3-85-white-blck-vizi-7e12-380.jpg"
+					<img src="{{ shoe[1].img_link }}"
 					     class="card-img-top" alt="...">
 					<div class="card-body text-center">
 						<div class="row">
 							<div class="col-8">
-								<h5 class="shoe-name">Nike ZoomX Vaporfly NEXT% 2</h5>
+								<h5 class="shoe-name">{{ shoe[0].name }}</h5>
 							</div>
 							<div class="col-4">
-								<div class="circle-singleline">80</div>
+								<div class="circle-singleline">{{ shoe[1].score }}</div>
 							</div>
 						</div>
 					</div>
 					<div class="row text-center">
 						<div class="col-4">
-							<p class="shoe-price">Price: £150</p>
+							<p class="shoe-price">Price: £{{ shoe[1].price }}</p>
 						</div>
 						<div class="col-4">
-							<p class="shoe-discount">Discount: £150</p>
+							<p class="shoe-discount">Discount: £{{ shoe[1].discount }}</p>
 						</div>
 						<div class="col-4">
-							<a href="https://www.sportsshoes.com/products/saucony/z/z/shoes/" class="shoe-link"><i
+							<a href="{{ shoe[1].deal_link }}" class="shoe-link" target="_blank"><i
 									class="fa-solid fa-arrow-up-right-from-square fa-2x"></i></a>
 						</div>
 					</div>
 				</div>
 			</div>
+			{% endfor %}
+		</div>
+		<div class="row text-center my-1">
+			<p class="muted">*Size 10 UK</p>
 		</div>
 	</div>
 </section>

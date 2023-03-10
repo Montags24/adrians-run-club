@@ -10,12 +10,10 @@
 	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;900&family=Pacifico&display=swap"
 	      rel="stylesheet">
 	<!-- Bootstrap CSS -->
-
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
 	      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 	<!--	<link rel="stylesheet" href="\static\css\styles.css">-->
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-
 	<title>Adrian's Run Club</title>
 </head>
 <body>
@@ -53,7 +51,7 @@
 	<div class="container">
 		<div class="row justify-content-center text-center">
 			<h1 id="page-name" class="text-pacifico">Adrian's <i class="fa-solid fa-person-running"></i>Run Club</h1>
-			<h3 class="text-montserrat page-desc">Finding you the best deals on competitive running shoes</h3>
+			<h3 class="text-montserrat page-desc">Don't miss out on the best deals for competitive running shoes.</h3>
 			<a href="{{  url_for('sign_up') }}">
 				<button type="button" class="btn btn-warning btn-rounded btn-submit text-montserrat"
 				        style="font-weight: bold;">Sign up
@@ -119,7 +117,7 @@
 			<h1 class="my-4 text-montserrat">Current Deals*</h1>
 			{% for shoe in shoes %}
 			<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 text-center my-2">
-				<div class="card p-3 shadow-lg">
+				<div class="card p-3 shadow-lg" style="height:325px;">
 					<img src="{{ shoe[1].img_link }}"
 					     class="card-img-top" alt="...">
 					<div class="card-body text-center">
@@ -134,10 +132,10 @@
 					</div>
 					<div class="row text-center">
 						<div class="col-4">
-							<p class="shoe-price">Price: £{{ shoe[1].price }}</p>
+							<p class="shoe-price">MSRP: £{{ shoe[1].price }}</p>
 						</div>
 						<div class="col-4">
-							<p class="shoe-discount">Discount: £{{ shoe[1].discount }}</p>
+							<p class="shoe-discount">Best deal: £{{ shoe[1].discount }}</p>
 						</div>
 						<div class="col-4">
 							<a href="{{ shoe[1].deal_link }}" class="shoe-link" target="_blank"><i
@@ -174,11 +172,8 @@
 									<h4>Adrian, Cheltenham</h4>
 								</div>
 							</div>
-
 						</div>
-
 					</div>
-
 				</div>
 				<div class="carousel-item">
 					<div class="row justify-content-center text-center">
@@ -195,9 +190,7 @@
 									<h4>Ed, York</h4>
 								</div>
 							</div>
-
 						</div>
-
 					</div>
 				</div>
 				<div class="carousel-item">
@@ -215,9 +208,7 @@
 									<h4>Ben, Essex</h4>
 								</div>
 							</div>
-
 						</div>
-
 					</div>
 				</div>
 			</div>

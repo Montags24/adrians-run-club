@@ -57,21 +57,22 @@
 						<div class="col-md-3 col-sm-6 col-xs-6 my-3">
 							<div class="row"><h4>Select shoe:</h4></div>
 							<select name="shoe" class="form-select" aria-label="Default select example">
-								{%  for shoe in all_shoes:  %}
-								<option value="{{  shoe  }}">{{  shoe  }}</option>
-								{%  endfor  %}
+								{% for shoe in all_shoes: %}
+								<option value="{{  shoe  }}">{{ shoe }}</option>
+								{% endfor %}
 							</select>
 						</div>
 						<div class="col-md-3 col-sm-6 col-xs-6 my-3">
 							<div class="row"><h4>Select size:</h4></div>
 							<select name="size" class="form-select" aria-label="Default select example">
-								{%  for size in sizes.keys()  %}
-								<option value="{{  size  }}">{{  size  }}</option>
-								{%  endfor  %}
+								{% for size in sizes %}
+								<option value="{{  size  }}">{{ size }}</option>
+								{% endfor %}
 							</select>
 						</div>
 						<div class="col-md-1 col-sm-4 col-xs-6 my-4">
-							<button type="submit" id="form-submit" name="form-submit" value="submit" class="btn btn-warning btn-rounded text-montserrat"
+							<button type="submit" id="form-submit" name="form-submit" value="submit"
+							        class="btn btn-warning btn-rounded text-montserrat"
 							        style="font-weight: bold;">
 								Select
 							</button>
@@ -79,6 +80,12 @@
 					</div>
 				</form>
 			</div>
+			{% if not exist: %}
+			<div class="alert alert-danger alert-dismissible fade show" style="width:auto;">
+				<strong>Error!</strong> That shoe and size does not exist in our database
+				<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+			</div>
+			{% endif %}
 			<div class="row justify-content-center">
 				{% for shoe in shoes %}
 				<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 text-center my-2">
@@ -101,7 +108,7 @@
 								<p class="shoe-size">{{ shoe['size'] }}</p>
 							</div>
 							<div class="col-4">
-								<p>Discount:</p>
+								<p>Best deal:</p>
 								<p class="shoe-discount">£{{ shoe['discount'] }}</p>
 							</div>
 							<div class="col-4">
@@ -109,10 +116,12 @@
 										class="fa-solid fa-arrow-up-right-from-square fa-2x"></i></a>
 							</div>
 						</div>
-							<div class="row">
-								<form action="" method="POST">
-									<button type="submit" id="delete-btn" name="delete-btn" value="{{  loop.index  }}"  class="btn btn-danger">Delete</button>
-								</form>
+						<div class="row">
+							<form action="" method="POST">
+								<button type="submit" id="delete-btn" name="delete-btn" value="{{  loop.index  }}"
+								        class="btn btn-danger">Delete
+								</button>
+							</form>
 						</div>
 					</div>
 				</div>
@@ -122,10 +131,10 @@
 	</div>
 </section>
 
-<section id="#" style="height:30vh">
+<section id="email-alerts" style="height:30vh">
 	<div class="container">
 		<div class="row justify-content-center text-center my-5">
-			<h1 id="#" class="text-pacifico" style="font-size:8vh">Get alerts via email!</h1>
+			<h1 class="text-pacifico" style="font-size:8vh">Get alerts via email!</h1>
 			<form>
 				<div class="my-5 d-flex justify-content-center">
 					<div class="form-floating">

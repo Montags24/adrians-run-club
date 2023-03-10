@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from api_requests import retrieve_data
-from random import choice
+from random import choice, sample
 
 app = Flask(__name__)
 
@@ -46,7 +46,7 @@ def add_row(entry):
 
 
 def get_brand_id(brand_name):
-    """Returns the id linked to Brand id"""
+    """Returns the id linked to Brand name"""
     with app.app_context():
         brand = Brand.query.filter_by(name=brand_name).first()
         return brand.id
@@ -77,23 +77,6 @@ def does_model_exist(shoe_model):
         return exist
 
 
-def return_shoe_names():
-    with app.app_context():
-        shoe_brand_data = Brand.query.all()
-        all_shoes = sorted([shoe.name for shoe in shoe_brand_data])
-        return all_shoes
-
-
-def return_shoes():
-    """Return 6 random shoes with data for home page"""
-    with app.app_context():
-        shoe_data = Shoe.query.filter_by(size=10.0).all()
-        shoe_list = [choice(shoe_data) for _ in range(6)]
-        shoe_names = [Brand.query.filter(Brand.id.like(shoe.brand_id)).first() for shoe in shoe_list]
-        zipped_list = list(zip(shoe_names, shoe_list))
-        return zipped_list
-
-
 def does_shoe_exist(size, brand_id):
     """Checks if child class exists"""
     with app.app_context():
@@ -102,6 +85,23 @@ def does_shoe_exist(size, brand_id):
             Shoe.size.like(size)
         ).first() is not None
         return exist
+
+def return_shoe_names():
+    with app.app_context():
+        shoe_brand_data = Brand.query.all()
+        all_shoes = sorted([shoe.name for shoe in shoe_brand_data])
+        return all_shoes
+
+
+def return_homepage_shoes():
+    """Return 6 random shoes with data for home page"""
+    with app.app_context():
+        shoe_data = Shoe.query.filter_by(size=10.0).all()
+        shoe_list = sample(shoe_data, 6)
+        shoe_names = [Brand.query.filter(Brand.id.like(shoe.brand_id)).first() for shoe in shoe_list]
+        zipped_list = list(zip(shoe_names, shoe_list))
+        print(shoe_names)
+        return zipped_list
 
 
 def update_database():

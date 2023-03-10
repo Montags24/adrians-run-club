@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session
 from flask_session import Session
 from dotenv import load_dotenv
-from database import get_brand_id, get_shoe_data, return_shoes, return_shoe_names
+from database import get_brand_id, get_shoe_data, return_homepage_shoes, return_shoe_names, does_shoe_exist
 from api_requests import sizes
 import smtplib
 import os
@@ -30,7 +30,7 @@ def send_email(name, number, email, message):
 @app.route("/", methods=["GET", "POST"])
 def home():
     if request.method == "GET":
-        shoes = return_shoes()
+        shoes = return_homepage_shoes()
         return render_template("home.html", shoes=shoes)
     else:
         name = request.form["name"]
@@ -44,9 +44,9 @@ def home():
 
 @app.route("/signup", methods=["GET", "POST"])
 def sign_up():
+    # Get all shoe brand names in alphabetical order
+    all_shoes = return_shoe_names()
     if request.method == "POST":
-        # Get all shoe brand names in alphabetical order
-        all_shoes = return_shoe_names()
         if "form-submit" in request.form:
             brand = request.form["shoe"]
             size = float(request.form["size"])
@@ -56,6 +56,8 @@ def sign_up():
             cart_list = session["cart"]
             brand_id = get_brand_id(brand_name=brand)
             shoe_data = get_shoe_data(brand_id=brand_id, shoe_size=size)
+            # Check if shoe is in database, otherwise throw up error
+            exist = does_shoe_exist(size=size, brand_id=brand_id)
             if shoe_data is not None:
                 cart_list.append({
                     "name": brand,
@@ -65,14 +67,16 @@ def sign_up():
                     "img_link": shoe_data.img_link,
                     "deal_link": shoe_data.deal_link,
                 })
+            return render_template("sign-up.html", shoes=session["cart"], all_shoes=all_shoes, sizes=sizes,
+                                   exist=exist)
         elif "delete-btn" in request.form:
             number = int(request.form["delete-btn"])
             if len(session["cart"]) > 0:
                 del session["cart"][number - 1]
-        return render_template("sign-up.html", shoes=session["cart"], all_shoes=all_shoes, sizes=sizes)
+        return render_template("sign-up.html", shoes=session["cart"], all_shoes=all_shoes, sizes=sizes, exist=True)
     else:
-        all_shoes = return_shoe_names()
-        return render_template("sign-up.html", all_shoes=all_shoes, sizes=sizes)
+        print("adsfdasdf")
+        return render_template("sign-up.html", all_shoes=all_shoes, sizes=sizes, exist=True)
 
 
 if __name__ == "__main__":

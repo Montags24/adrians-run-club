@@ -83,21 +83,34 @@ def query_database(table, query, **kwargs):
             return result
 
 
-def check_for_deal():
-    """Returns True if price of specific shoe and size is more than what's recorded in database"""
+def check_for_deals():
+    """Emails users if shoe is on sale"""
     with app.app_context():
-        # all_user_shoes = UserChoice.query.all()
-        all_user_shoes = query_database(table=UserChoice, query="all")
-        for shoe in all_user_shoes:
-            name = shoe.shoe_name
-            size = shoe.size
-            price = shoe.discount
-            brand_id = query_database(table=Brand, query="first", name=name).id
-            db_shoe = query_database(table=Shoe, query="first", size=size, brand_id=brand_id)
-            print(price, db_shoe.discount)
-            if db_shoe.discount < price:
-                print("It is on sale!")
-                print(f"{name} is on discount for {db_shoe.discount} at {db_shoe.deal_link}")
+        # loop through email in user table
+        users = query_database(table=User, query="all")
+        for user in users:
+            deals = []
+            email = user.email
+            # get id
+            user_id = user.id
+        # loop through shoes in user_choice with user_id = id
+            shoes = query_database(table=UserChoice, query="all", user_id=user_id)
+            for shoe in shoes:
+                name = shoe.shoe_name
+                size = shoe.size
+                price = shoe.discount
+                shoe_id = query_database(table=Brand, query="first", name=name).id
+                db_shoe = query_database(table=Shoe, query="first", brand_id=shoe_id, size=size)
+                if db_shoe.discount < price:
+                    deals.append([name, size, db_shoe.discount, db_shoe.deal_link])
+            if len(deals) > 0:
+                print(email)
+                print("Deal alert! The following shoes are on sale:")
+                for deal in deals:
+                    print(f"{deal[0]} size {deal[1]} is on discount for £{deal[2]}. Get it now at {deal[3]}")
+
+# check_for_deal()
+
 
 
 def db_update_database():
@@ -114,10 +127,8 @@ def db_update_database():
             img_link = shoe["img_link"]
             deal_link = shoe["deal_link"]
             # Check if shoe model exists in brand table
-            # if db_does_model_exist(name):
             if query_database(table=Brand, query="first", name=name) is not None:
                 # Check if shoe data exists in shoe table
-                # brand_id = db_get_brand_id(name)
                 brand_id = query_database(table=Brand, query="first", name=name).id
                 shoe = Shoe(size=size,
                             price=price,
@@ -126,13 +137,10 @@ def db_update_database():
                             img_link=img_link,
                             deal_link=deal_link,
                             brand_id=brand_id)
-                # if db_does_shoe_exist(size, brand_id):
                 if query_database(table=Shoe, query="first", size=size, brand_id=brand_id) is not None:
                     # Get shoe id
-                    # shoe_id = db_get_shoe_id(size=size, brand_id=brand_id)
                     shoe_id = query_database(table=Shoe, query="first", size=size, brand_id=brand_id).id
-                    # Find shoe entry based off unique id
-                    # shoe_update = Shoe.query.filter(Shoe.id.like(shoe_id)).first()
+                    # Find shoe entry based off unique id to update
                     shoe_update = query_database(table=Shoe, query="first", id=shoe_id)
                     # Update shoe entry based off unique id
                     shoe_update.size = size
@@ -149,7 +157,6 @@ def db_update_database():
                 # If brand does not exist, add row
                 brand = Brand(name=name)
                 db_add_row(brand)
-                # brand_id = db_get_brand_id(name)
                 brand_id = query_database(table=Brand, query="first", name=name).id
                 shoe = Shoe(size=size,
                             price=price,

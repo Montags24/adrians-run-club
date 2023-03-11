@@ -84,11 +84,15 @@ def sign_up():
 
 @app.route("/signup/success", methods=["GET", "POST"])
 def sign_up_success():
+    """Add user email and shoe choices to database"""
     if request.method == "POST":
         email = request.form["email"]
         user_shoes = [[shoe["name"], shoe["size"], shoe["discount"]] for shoe in session["cart"]]
         user = User(email=email)
-        db_add_row(user)
+        # Check if user exists
+        exists = query_database(table=User, query="first", email=email) is not None
+        if not exists:
+            db_add_row(user)
         user_id = query_database(table=User, query="first", email=email).id
         for shoe in user_shoes:
             user_choice = UserChoice(shoe_name=shoe[0], size=shoe[1], discount=shoe[2], user_id=user_id)

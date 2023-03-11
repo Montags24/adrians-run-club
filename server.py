@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session
 from flask_session import Session
 from dotenv import load_dotenv
-from database import get_brand_id, get_shoe_data, return_homepage_shoes, return_shoe_names, does_shoe_exist
+from database import db_return_homepage_shoes, db_add_row, query_database, Brand, Shoe, User, UserChoice
 from api_requests import sizes
 import smtplib
 import os
@@ -29,10 +29,11 @@ def send_email(name, number, email, message):
 
 @app.route("/", methods=["GET", "POST"])
 def home():
+    """Homepage for Adrian's Run Club"""
     if request.method == "GET":
-        shoes = return_homepage_shoes()
-        return render_template("home.html", shoes=shoes)
+        return render_template("home.html", shoes=db_return_homepage_shoes())
     else:
+        # Send email if user fills out and sends contact form
         name = request.form["name"]
         phone_number = request.form["phone-number"]
         email = request.form["email"]
@@ -44,20 +45,23 @@ def home():
 
 @app.route("/signup", methods=["GET", "POST"])
 def sign_up():
+    """Sign up page for user to chose shoes and get alerts vid email"""
     # Get all shoe brand names in alphabetical order
-    all_shoes = return_shoe_names()
+    shoe_brand_data = query_database(table=Brand, query="all")
+    all_shoes = sorted([shoe.name for shoe in shoe_brand_data])
     if request.method == "POST":
+        # Check if user is adding shoe to cart or if deleting a shoe
         if "form-submit" in request.form:
             brand = request.form["shoe"]
             size = float(request.form["size"])
-            # Create session
+            # Create flask session
             if "cart" not in session:
                 session["cart"] = []
             cart_list = session["cart"]
-            brand_id = get_brand_id(brand_name=brand)
-            shoe_data = get_shoe_data(brand_id=brand_id, shoe_size=size)
-            # Check if shoe is in database, otherwise throw up error
-            exist = does_shoe_exist(size=size, brand_id=brand_id)
+            brand_id = query_database(table=Brand, query="first", name=brand).id
+            shoe_data = query_database(table=Shoe, query="first", brand_id=brand_id, size=size)
+            # Check if shoe is in database, otherwise throw up error message
+            exist = query_database(table=Shoe, query="first", size=size, brand_id=brand_id) is not None
             if shoe_data is not None:
                 cart_list.append({
                     "name": brand,
@@ -83,11 +87,15 @@ def sign_up_success():
     if request.method == "POST":
         email = request.form["email"]
         user_shoes = [[shoe["name"], shoe["size"], shoe["discount"]] for shoe in session["cart"]]
-        print(user_shoes)
+        user = User(email=email)
+        db_add_row(user)
+        user_id = query_database(table=User, query="first", email=email).id
+        for shoe in user_shoes:
+            user_choice = UserChoice(shoe_name=shoe[0], size=shoe[1], discount=shoe[2], user_id=user_id)
+            db_add_row(user_choice)
         return render_template("sign-up-success.html")
     else:
         return render_template("sign-up-success.html")
-
 
 
 if __name__ == "__main__":

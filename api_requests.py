@@ -7,13 +7,14 @@ URL = "https://api.runrepeat.com/get-documents"
 min_size = 6
 max_size = 13.5
 run_repeat_start_size = 1698 + min_size
-sizes = {size*0.5: run_repeat_start_size + i for i, size in enumerate(range(min_size*2, int(max_size*2)))}
+sizes = {size * 0.5: run_repeat_start_size + i for i, size in enumerate(range(min_size * 2, int(max_size * 2)))}
+
 
 def change_parameters(size, page, page_range):
     size_parameters = {
         "from": page_range,
         "size": 30,
-        "filter[]": [1, 6214, 16078, sizes[size]],
+        "filter[]": [1, 6214, 16078, sizes[size]],  # 6214 - Running shoes, 16078 Competition running shoes
         "f_id": 2,
         "c_id": 2,
         "orderBy": "popularity",
@@ -34,13 +35,14 @@ def retrieve_data():
             data = response.json()
             for product in data["products"]:
                 shoe_data.append(
-                    [product["name"], f"{size}", {
+                    {
+                        "name": product["name"],
+                        "size": size,
                         "price": product["msrp"],
                         "discount": product["min_price"],
                         "score": product["score"],
                         "img_link": product["default_color"]["image"]["url"].replace("{SIZE}", "600"),
                         "deal_link": product["deals"][0]["affiliate_link"]
                     }
-                    ]
                 )
     return shoe_data

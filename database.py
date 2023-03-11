@@ -100,7 +100,6 @@ def return_homepage_shoes():
         shoe_list = sample(shoe_data, 6)
         shoe_names = [Brand.query.filter(Brand.id.like(shoe.brand_id)).first() for shoe in shoe_list]
         zipped_list = list(zip(shoe_names, shoe_list))
-        print(shoe_names)
         return zipped_list
 
 

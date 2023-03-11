@@ -75,8 +75,19 @@ def sign_up():
                 del session["cart"][number - 1]
         return render_template("sign-up.html", shoes=session["cart"], all_shoes=all_shoes, sizes=sizes, exist=True)
     else:
-        print("adsfdasdf")
         return render_template("sign-up.html", all_shoes=all_shoes, sizes=sizes, exist=True)
+
+
+@app.route("/signup/success", methods=["GET", "POST"])
+def sign_up_success():
+    if request.method == "POST":
+        email = request.form["email"]
+        user_shoes = [[shoe["name"], shoe["size"], shoe["discount"]] for shoe in session["cart"]]
+        print(user_shoes)
+        return render_template("sign-up-success.html")
+    else:
+        return render_template("sign-up-success.html")
+
 
 
 if __name__ == "__main__":

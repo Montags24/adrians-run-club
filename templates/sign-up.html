@@ -133,7 +133,7 @@
 	<div class="container">
 		<div class="row justify-content-center text-center my-5">
 			<h1 class="text-pacifico" style="font-size:8vh">Get alerts via email!</h1>
-			<form>
+			<form action="{{ url_for('sign_up_success') }}" method="POST">
 				<div class="my-5 d-flex justify-content-center">
 					<div class="form-floating">
 						<input name="email" type="email" class="form-control" id="email"
@@ -141,9 +141,8 @@
 						<label for="email">Email address</label>
 					</div>
 				</div>
-				<button type="submit" class="btn btn-warning btn-rounded text-montserrat"
-				        style="font-weight: bold;"><a href="#"
-				                                      style="color: black; text-decoration: none;">Sign Up</a>
+				<button type="submit" value="submit" name="email-submit" id="email-submit" class="btn btn-warning btn-rounded text-montserrat"
+				        style="font-weight: bold;">Sign Up
 				</button>
 			</form>
 		</div>

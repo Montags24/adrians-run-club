@@ -1,5 +1,6 @@
 import requests
 
+
 URL = "https://api.runrepeat.com/get-documents"
 
 # Create dictionary that stores key:value pairs of shoe size to headers used in RunRepeat's API

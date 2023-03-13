@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session
 from flask_session import Session
 from dotenv import load_dotenv
-from database import db_return_homepage_shoes, db_add_row, query_database, Brand, Shoe, User, UserChoice
+from database import Brand, Shoe, User, UserChoice, db_return_homepage_shoes, db_add_row, query_database
 from api_requests import sizes
 import smtplib
 import os
@@ -11,20 +11,9 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 load_dotenv()
-GMAIL_EMAIL = os.getenv("GMAIL_EMAIL")
-MY_PASSWORD = os.getenv("GMAIL_PASSWORD")
+GMAIL_EMAIL = os.getenv("GMAIL_RR_EMAIL")
+MY_PASSWORD = os.getenv("GMAIL_RR_PASSWORD")
 EMAIL = os.getenv("EMAIL")
-
-
-def send_email(name, number, email, message):
-    with smtplib.SMTP("smtp.gmail.com") as connection:
-        connection.starttls()
-        connection.login(user=GMAIL_EMAIL, password=MY_PASSWORD)
-        connection.sendmail(
-            from_addr=GMAIL_EMAIL,
-            to_addrs=EMAIL,
-            msg=f"\n\nName: {name}\nPhone number: {number}\nEmail: {email}\nMessage: {message}"
-        )
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -38,8 +27,16 @@ def home():
         phone_number = request.form["phone-number"]
         email = request.form["email"]
         message = request.form["message"]
-        print(f"Name: {name}\nPhone number: {phone_number}\nEmail: {email}\nMessage: {message}")
-        send_email(name, phone_number, email, message)
+        subject = f"Adrian's Run Club - You have a new message from {name}!"
+        body = f"Name: {name}\nPhone number: {phone_number}\nEmail: {email}\nMessage: {message}"
+        with smtplib.SMTP("smtp.gmail.com") as connection:
+            connection.starttls()
+            connection.login(user=GMAIL_EMAIL, password=MY_PASSWORD)
+            connection.sendmail(
+                from_addr=GMAIL_EMAIL,
+                to_addrs=EMAIL,
+                msg=f"Subject: {subject}\n\n{body}"
+            )
         return render_template("message-success.html")
 
 
@@ -93,6 +90,20 @@ def sign_up_success():
         exists = query_database(table=User, query="first", email=email) is not None
         if not exists:
             db_add_row(user)
+            # Email user welcoming them to Adrian's Run Club
+            subject = "Welcome to Adrian's Run Club!"
+            body = "You have successfully signed up to Adrian's run club with the following shoes:\n\n"
+            for shoe in user_shoes:
+                body += f"{shoe[0]} in size {shoe[1]}\n"
+            body += "\nPlease don't forget to mark this address as safe to receive future emails!"
+            with smtplib.SMTP("smtp.gmail.com") as connection:
+                connection.starttls()
+                connection.login(user=GMAIL_EMAIL, password=MY_PASSWORD)
+                connection.sendmail(
+                    from_addr=GMAIL_EMAIL,
+                    to_addrs=email,
+                    msg=f"Subject: {subject}\n\n{body.encode('ascii', 'ignore').decode('ascii')}"
+                )
         user_id = query_database(table=User, query="first", email=email).id
         for shoe in user_shoes:
             user_choice = UserChoice(shoe_name=shoe[0], size=shoe[1], discount=shoe[2], user_id=user_id)

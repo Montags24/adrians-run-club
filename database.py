@@ -2,14 +2,19 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from api_requests import retrieve_data
 from random import sample
+from dotenv import load_dotenv
+import smtplib
+import os
+
 
 app = Flask(__name__)
-
-# Create database
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///shoes.db"
 # Optional: But it will silence the deprecation warning in the console.
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+load_dotenv()
+GMAIL_EMAIL = os.getenv("GMAIL_RR_EMAIL")
+MY_PASSWORD = os.getenv("GMAIL_RR_PASSWORD")
 
 
 class Brand(db.Model):
@@ -83,7 +88,7 @@ def query_database(table, query, **kwargs):
             return result
 
 
-def check_for_deals():
+def db_check_for_deals():
     """Emails users if shoe is on sale"""
     with app.app_context():
         # loop through email in user table
@@ -91,7 +96,6 @@ def check_for_deals():
         for user in users:
             deals = []
             email = user.email
-            # get id
             user_id = user.id
         # loop through shoes in user_choice with user_id = id
             shoes = query_database(table=UserChoice, query="all", user_id=user_id)
@@ -103,14 +107,27 @@ def check_for_deals():
                 db_shoe = query_database(table=Shoe, query="first", brand_id=shoe_id, size=size)
                 if db_shoe.discount < price:
                     deals.append([name, size, db_shoe.discount, db_shoe.deal_link])
+                    # Update user shoe price to reflect new price, so they do not get emailed every day
+                    shoe_id = query_database(table=UserChoice, query="first", user_id=user_id, size=size, shoe_name=name).id
+                    shoe_update = db.session.query(UserChoice).filter_by(id=shoe_id).first()
+                    shoe_update.discount = db_shoe.discount
+                    db.session.commit()
             if len(deals) > 0:
-                print(email)
-                print("Deal alert! The following shoes are on sale:")
+                subject = "Adrian's Run Club - Deal Alert!"
+                body = "The following shoes are on sale now!\n\n"
                 for deal in deals:
-                    print(f"{deal[0]} size {deal[1]} is on discount for £{deal[2]}. Get it now at {deal[3]}")
-
-# check_for_deal()
-
+                    body += f"{deal[0]} size {deal[1]} is on discount for {deal[2]} GBP. Get it now at {deal[3]}\n"
+                body += f"\nUnsubscribe at the following link"
+                with smtplib.SMTP("smtp.gmail.com") as connection:
+                    connection.starttls()
+                    connection.login(user=GMAIL_EMAIL, password=MY_PASSWORD)
+                    connection.sendmail(
+                        from_addr=GMAIL_EMAIL,
+                        to_addrs=email,
+                        msg=f"Subject: {subject}\n\n{body.encode('ascii', 'ignore').decode('ascii')}"
+                    )
+                print("success")
+                print(email)
 
 
 def db_update_database():
@@ -141,7 +158,8 @@ def db_update_database():
                     # Get shoe id
                     shoe_id = query_database(table=Shoe, query="first", size=size, brand_id=brand_id).id
                     # Find shoe entry based off unique id to update
-                    shoe_update = query_database(table=Shoe, query="first", id=shoe_id)
+                    shoe_update = db.session.query(Shoe).filter_by(id=shoe_id).first()
+                    # shoe_update = query_database(table=Shoe, query="first", id=shoe_id)
                     # Update shoe entry based off unique id
                     shoe_update.size = size
                     shoe_update.price = price
@@ -166,8 +184,3 @@ def db_update_database():
                             deal_link=deal_link,
                             brand_id=brand_id)
                 db_add_row(shoe)
-
-
-# create_table()
-# db_update_database()
-# db_return_shoes()

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;900&family=Pacifico&display=swap"
+	      rel="stylesheet">
+	<!-- Bootstrap CSS -->
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+	      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+	<title>Adrian's Run Club</title>
+</head>
+<body>
+
+<section id="navbar">
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div class="container">
+			<a class="navbar-brand" href="#">Adrian's Run Club</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+			        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="{{ url_for('home')  }}">Home</a>
+					</li>
+					<li class="nav-item">
+					<li class="nav-item">
+						<a class="nav-link" href="#">Sign Up</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+</section>
+
+
+<section id="top-section" style="height:100vh">
+	<div class="container">
+		<div class="row justify-content-center text-center">
+			<h1 id="page-name" class="text-pacifico" style="font-size:8vh">Unsubscribed successfully!</h1>
+			<h3>See you next time!</h3>
+			<button type="button" class="btn btn-warning btn-rounded btn-submit text-montserrat"
+			        style="font-weight: bold;"><a href="{{ url_for('home')  }}" style="color: black; text-decoration: none;">Go back</a>
+			</button>
+		</div>
+	</div>
+</section>
+
+		<!-- Font is awesome -->
+		<script src="https://kit.fontawesome.com/1f8ce701db.js" crossorigin="anonymous"></script>
+		<!-- Optional JavaScript; choose one of the two! -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+		        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+		        crossorigin="anonymous"></script>
+</body>
+</html>

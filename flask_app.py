@@ -1,10 +1,13 @@
 from flask import Flask, render_template, request, session
 from flask_session import Session
 from dotenv import load_dotenv
-from database import Brand, Shoe, User, UserChoice, db_return_homepage_shoes, db_add_row, query_database
+from database import Brand, Shoe, User, UserChoice, db_return_homepage_shoes, db_add_row, query_database, db, app as db_app
+from key_generator.key_generator import generate
+from sqlalchemy import delete
 from api_requests import sizes
 import smtplib
 import os
+
 
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
@@ -42,7 +45,7 @@ def home():
 
 @app.route("/signup", methods=["GET", "POST"])
 def sign_up():
-    """Sign up page for user to chose shoes and get alerts vid email"""
+    """Sign up page for user to choose shoes and get alerts via email"""
     # Get all shoe brand names in alphabetical order
     shoe_brand_data = query_database(table=Brand, query="all")
     all_shoes = sorted([shoe.name for shoe in shoe_brand_data])
@@ -84,8 +87,9 @@ def sign_up_success():
     """Add user email and shoe choices to database"""
     if request.method == "POST":
         email = request.form["email"]
+        key = generate(5, '-', 3, 3, type_of_value='hex', capital='none').get_key()
         user_shoes = [[shoe["name"], shoe["size"], shoe["discount"]] for shoe in session["cart"]]
-        user = User(email=email)
+        user = User(email=email, key=key)
         # Check if user exists
         exists = query_database(table=User, query="first", email=email) is not None
         if not exists:
@@ -111,6 +115,25 @@ def sign_up_success():
         return render_template("sign-up-success.html")
     else:
         return render_template("sign-up-success.html")
+
+
+@app.route("/unsubscribe/<token>", methods=["GET", "POST"])
+def unsubscribe(token):
+    if request.method == "GET":
+        with db_app.app_context():
+            user_id = db.session.query(User).filter_by(key=token).first().id
+            stmt = (
+                delete(UserChoice).
+                where(UserChoice.user_id == user_id)
+            )
+            stmt2 = (
+                delete(User).
+                where(User.key == token)
+            )
+            db.session.execute(stmt)
+            db.session.execute(stmt2)
+            db.session.commit()
+    return render_template("unsubscribe.html")
 
 
 if __name__ == "__main__":

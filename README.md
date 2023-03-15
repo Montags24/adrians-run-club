@@ -10,7 +10,7 @@ Adrian's Run Club will scrape the website RunRepeat for its competitive shoes an
 - Python v3.11 with the Flask framework for the back-end
 - SQLite for storing data in a database, SQLalchemy to query the database
 - Git for version control
-- Selenium and Beautiful Soup to scrape data from RunRepeat
+- Requests module using RunRepeat's API to get shoe data
 
 
 
@@ -22,4 +22,6 @@ Adrian's Run Club will scrape the website RunRepeat for its competitive shoes an
 ### Relationship mapping within database
 - Got stuck on this for hours. My database is made up of two sheets. The first sheet (Brand) contains all the names of the shoes, whilst the second (Shoe) contains all the information about the shoe (size, price, discount, image link, deal link). By having the Brand sheet at as the parent and the Shoe sheet as the child, I would be able to relate shoe data to the name of the shoe. Using SQLalchemy, to create a table sheet you base it off a Class, in this case I had a Brand and Shoe class. To relate the Shoe and Brand class, I included a foreign key. I thought I could link the shoe class to the brand class by name, eg "Nike" but actually needed to link it via its primary key.
 - Getting the shoe data to import into the database was a real HOORAH moment.
-
+### Deploying the app online
+- Next logical step is to deploy the app online
+- 

@@ -40,6 +40,7 @@ class Shoe(db.Model):
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(200), unique=True, nullable=False)
+    key = db.Column(db.String(200), unique=True, nullable=False)
     shoe_alerts = db.relationship("UserChoice", backref="user")
 
     def __repr__(self):
@@ -113,21 +114,20 @@ def db_check_for_deals():
                     shoe_update.discount = db_shoe.discount
                     db.session.commit()
             if len(deals) > 0:
+                key = query_database(table=User, query="first", email=email).key
                 subject = "Adrian's Run Club - Deal Alert!"
                 body = "The following shoes are on sale now!\n\n"
                 for deal in deals:
                     body += f"{deal[0]} size {deal[1]} is on discount for {deal[2]} GBP. Get it now at {deal[3]}\n"
-                body += f"\nUnsubscribe at the following link"
+                body += f"\nUnsubscribe at the following link: www.adriansrunclub.co.uk/unsubscribe/{key}"
                 with smtplib.SMTP("smtp.gmail.com") as connection:
                     connection.starttls()
                     connection.login(user=GMAIL_EMAIL, password=MY_PASSWORD)
                     connection.sendmail(
                         from_addr=GMAIL_EMAIL,
                         to_addrs=email,
-                        msg=f"Subject: {subject}\n\n{body.encode('ascii', 'ignore').decode('ascii')}"
+                        msg=f"Subject: {subject}\n\n{body}"
                     )
-                print("success")
-                print(email)
 
 
 def db_update_database():

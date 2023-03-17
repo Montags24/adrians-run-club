@@ -88,30 +88,24 @@
 				{% for shoe in shoes %}
 				<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 text-center my-2">
 					<div class="card p-3 shadow-lg">
-						<img src="{{ shoe['img_link'] }}"
-						     class="card-img-top" alt="...">
+						<div><strong>Reviews: {{ shoe['score'] }}% positive</strong></div>
+						<a href="{{ shoe['deal_link'] }}" target="_blank" class="shoe-link">
+							<img src="{{ shoe['img_link'] }}"
+							     class="card-img-top" alt="...">
+						</a>
 						<div class="card-body text-center">
 							<div class="row">
-								<div class="col-8">
-									<h5 class="shoe-name">{{ shoe['name'] }}</h5>
-								</div>
-								<div class="col-4">
-									<div class="circle-singleline">{{ shoe['score'] }}</div>
-								</div>
+								<h5 class="shoe-name">{{ shoe['name'] }}</h5>
 							</div>
 						</div>
-						<div class="row text-center">
-							<div class="col-4">
-								<p>Size:</p>
-								<p class="shoe-size">{{ shoe['size'] }}</p>
+						<div class="row">
+							<div class="col-6">
+								<p class="shoe-size text-montserrat" style="text-align:center;">{{ shoe['size'] }}
+									UK</p>
 							</div>
-							<div class="col-4">
-								<p>Best deal:</p>
-								<p class="shoe-discount">£{{ shoe['discount'] }}</p>
-							</div>
-							<div class="col-4">
-								<a href="{{ shoe['deal_link'] }}" target="_blank" class="shoe-link"><i
-										class="fa-solid fa-arrow-up-right-from-square fa-2x"></i></a>
+							<div class="col-6">
+								<p class="shoe-discount text-montserrat" style="text-align:center;">£{{ shoe['discount']
+									}}</p>
 							</div>
 						</div>
 						<div class="row">
@@ -141,7 +135,8 @@
 						<label for="email">Email address</label>
 					</div>
 				</div>
-				<button type="submit" value="submit" name="email-submit" id="email-submit" class="btn btn-warning btn-rounded text-montserrat"
+				<button type="submit" value="submit" name="email-submit" id="email-submit"
+				        class="btn btn-warning btn-rounded text-montserrat"
 				        style="font-weight: bold;">Sign Up
 				</button>
 			</form>

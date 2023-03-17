@@ -114,40 +114,37 @@
 <section id="bottom-section">
 	<div class="container">
 		<div class="row text-center">
-			<h1 class="my-4 text-montserrat">Current Deals*</h1>
+			<h1 class="mt-4 text-montserrat">Current Deals</h1>
+			<p class="muted">Size 10 UK</p>
 			{% for shoe in shoes %}
 			<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 my-2">
 				<div class="card p-3 shadow-lg" style="height:325px;">
-					<img src="{{ shoe[1].img_link }}"
-					     class="card-img-top" alt="...">
-					<div class="card-body">
-						<div class="row text-center">
-							<div class="col-8">
+					<div class="row">
+						<div class="circle-singleline"><strong>Reviews: {{ shoe[1].score }}% positive</strong></div>
+					</div>
+					<div class="row">
+						<a href="{{ shoe[1].deal_link }}" class="shoe-link" target="_blank"><img
+								src="{{ shoe[1].img_link }}"
+								class="card-img-top mt-3" alt="..." style="height:120px;"></a>
+					</div>
+					<div class="row">
+						<div class="card-body" style="height:90px;">
+							<div class="row text-center">
 								<h5 class="shoe-name">{{ shoe[0].name }}</h5>
-							</div>
-							<div class="col-4">
-								<div class="circle-singleline">{{ shoe[1].score }}</div>
 							</div>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-4" style="padding:5px;">
-							<p class="shoe-price text-montserrat"><s>£{{ shoe[1].price }}</s></p>
+						<div class="col-6 text-center" style="padding:5px;">
+							<p class="text-montserrat"><s>£{{ shoe[1].price }}</s></p>
 						</div>
-						<div class="col-4" style="padding:5px;">
-							<p class="shoe-discount text-montserrat"><strong>£{{ shoe[1].discount }}</strong></p>
-						</div>
-						<div class="col-4">
-							<a href="{{ shoe[1].deal_link }}" class="shoe-link" target="_blank"><i
-									class="fa-solid fa-arrow-up-right-from-square fa-2x"></i></a>
+						<div class="col-6 text-center" style="padding:5px;">
+							<p class="text-montserrat"><strong>£{{ shoe[1].discount }}</strong></p>
 						</div>
 					</div>
 				</div>
 			</div>
 			{% endfor %}
-		</div>
-		<div class="row text-center my-1">
-			<p class="muted">*Size 10 UK</p>
 		</div>
 	</div>
 </section>
@@ -161,18 +158,22 @@
 			<div class="col-md-9 col-sm-10">
 				<div class="row">
 					<div class="col-md-5 col-sm-4">
-						<img class="andorra-img img-fluid mb-5" src="{{ url_for('static', filename='/images/andorra.jpg') }}" alt="Andorra 70.3" style="height:400px;">
+						<img class="andorra-img img-fluid mb-5"
+						     src="{{ url_for('static', filename='/images/andorra.jpg') }}" alt="Andorra 70.3"
+						     style="height:400px;">
 					</div>
 					<div class="col-md-7 col-sm-8" style="text-align: left;">
 						<h3>Hi, I'm Adrian.</h3>
 						<br>
 						<h4>I'm a passionate runner and deal hunter. As someone who loves to
-							scour r/RunningShoeGeeks, I understand how important it is to have durable and affordable running
+							scour r/RunningShoeGeeks, I understand how important it is to have durable and affordable
+							running
 							shoes. I created this site to help fellow runners get alerts for the best deals.
 							I get my data daily from RunRepeat (Thanks Jens!), and my goal is to pair you with
 							your next PB-smashing race day shoes!</h4>
 						<br>
-						<h4>Join our community of runners and never miss a deal on your favorite running shoes again!</h4>
+						<h4>Join our community of runners and never miss a deal on your favorite running shoes
+							again!</h4>
 					</div>
 				</div>
 			</div>
@@ -244,7 +245,8 @@
 					<li class="nav-item"><a href="#top-section" class="nav-link px-2 text-montserrat">Home</a></li>
 					<li class="nav-item"><a href="#middle-section" class="nav-link px-2 text-montserrat">About</a></li>
 					<li class="nav-item"><a href="#bottom-section" class="nav-link px-2 text-montserrat">Deals</a></li>
-					<li class="nav-item"><a href="{{  url_for('sign_up') }}" class="nav-link px-2 text-montserrat">Sign Up</a></li>
+					<li class="nav-item"><a href="{{  url_for('sign_up') }}" class="nav-link px-2 text-montserrat">Sign
+						Up</a></li>
 				</ul>
 				<p class="text-center text-montserrat">© 2023 Adrian's Run Club </p>
 			</footer>

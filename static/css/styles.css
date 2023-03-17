@@ -83,26 +83,27 @@
     color: #fff;
 }
 
+.shoe-price {
+    font-size: 25px;
+    text-align: right;
+}
+
+.shoe-discount {
+    font-size: 25px;
+    text-align: left;
+}
+
 /* Testimonials */
-#testimonials {
+#about {
     background-color: #FAE8E0;
 
     padding: 20px 0 90px;
 }
-
-.testimonial-img {
-    border-radius: 90%;
+.andorra-img {
+    border-radius: 20px;
+    object-fit: cover;
 }
 
-.testimonial-text {
-    font-size: 3vh;
-    margin: 60px 0 30px;
-    font-weight: bold;
-}
-
-.testimonial-name {
-   height:50%;
-}
 
 /* Contact me page */
 #contact-me {

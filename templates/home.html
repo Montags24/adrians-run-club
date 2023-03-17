@@ -116,12 +116,12 @@
 		<div class="row text-center">
 			<h1 class="my-4 text-montserrat">Current Deals*</h1>
 			{% for shoe in shoes %}
-			<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 text-center my-2">
+			<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 my-2">
 				<div class="card p-3 shadow-lg" style="height:325px;">
 					<img src="{{ shoe[1].img_link }}"
 					     class="card-img-top" alt="...">
-					<div class="card-body text-center">
-						<div class="row">
+					<div class="card-body">
+						<div class="row text-center">
 							<div class="col-8">
 								<h5 class="shoe-name">{{ shoe[0].name }}</h5>
 							</div>
@@ -130,12 +130,12 @@
 							</div>
 						</div>
 					</div>
-					<div class="row text-center">
-						<div class="col-4">
-							<p class="shoe-price">MSRP: £{{ shoe[1].price }}</p>
+					<div class="row">
+						<div class="col-4" style="padding:5px;">
+							<p class="shoe-price text-montserrat"><s>£{{ shoe[1].price }}</s></p>
 						</div>
-						<div class="col-4">
-							<p class="shoe-discount">Best deal: £{{ shoe[1].discount }}</p>
+						<div class="col-4" style="padding:5px;">
+							<p class="shoe-discount text-montserrat"><strong>£{{ shoe[1].discount }}</strong></p>
 						</div>
 						<div class="col-4">
 							<a href="{{ shoe[1].deal_link }}" class="shoe-link" target="_blank"><i
@@ -152,76 +152,30 @@
 	</div>
 </section>
 
-<section id="testimonials">
+<section id="about">
 	<div class="row text-center justify-content-center">
-		<h1 class="my-4 text-montserrat">Testimonials</h1>
-		<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-			<div class="carousel-inner">
-				<div class="carousel-item active">
-					<div class="row justify-content-center text-center">
-						<div class="col-md-6 col-sm-8">
-							<div class="row justify-content-center">
-								<h2 class="text-montserrat testimonial-text">I managed to pick up some Nike Alphafly's
-									for 60% off! I ran a 6-min PB in the half-marathon with them.</h2>
-							</div>
-							<div class="row justify-content-center d-flex h-60 align-items-center">
-								<div class="col-md-3 col-sm-12">
-									<img src="https://picsum.photos/150" alt="" class="testimonial-img">
-								</div>
-								<div class="col-md-4 col-sm-12 text-montserrat testimonial-name text-center">
-									<h4>Adrian, Cheltenham</h4>
-								</div>
-							</div>
-						</div>
+		<div class="row">
+			<h1 class="my-4 text-montserrat">About</h1>
+		</div>
+		<div class="row justify-content-center">
+			<div class="col-md-9 col-sm-10">
+				<div class="row">
+					<div class="col-md-5 col-sm-4">
+						<img class="andorra-img img-fluid mb-5" src="{{ url_for('static', filename='/images/andorra.jpg') }}" alt="Andorra 70.3" style="height:400px;">
 					</div>
-				</div>
-				<div class="carousel-item">
-					<div class="row justify-content-center text-center">
-						<div class="col-md-6 col-sm-8">
-							<div class="row justify-content-center">
-								<h2 class="text-montserrat testimonial-text">I got tired of searching for deals online
-									for new shoes. Adrian's Run Club makes it easy to get the best deals!</h2>
-							</div>
-							<div class="row justify-content-center d-flex h-60 align-items-center">
-								<div class="col-md-3 col-sm-12">
-									<img src="https://picsum.photos/150" alt="" class="testimonial-img">
-								</div>
-								<div class="col-md-4 col-sm-12 text-montserrat testimonial-name text-center">
-									<h4>Ed, York</h4>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="carousel-item">
-					<div class="row justify-content-center text-center">
-						<div class="col-md-6 col-sm-8">
-							<div class="row justify-content-center">
-								<h2 class="text-montserrat testimonial-text">I couldn't afford the Asics Metaspeed's. I
-									signed up to Adrian's Run Club and managed to snag them for 40% off.</h2>
-							</div>
-							<div class="row justify-content-center d-flex align-items-center">
-								<div class="col-md-3 col-sm-12">
-									<img src="https://picsum.photos/150" alt="" class="testimonial-img">
-								</div>
-								<div class="col-md-4 col-sm-12 text-montserrat testimonial-name text-center">
-									<h4>Ben, Essex</h4>
-								</div>
-							</div>
-						</div>
+					<div class="col-md-7 col-sm-8" style="text-align: left;">
+						<h3>Hi, I'm Adrian.</h3>
+						<br>
+						<h4>I'm a passionate runner and deal hunter. As someone who loves to
+							scour r/RunningShoeGeeks, I understand how important it is to have durable and affordable running
+							shoes. I created this site to help fellow runners get alerts for the best deals.
+							I get my data daily from RunRepeat (Thanks Jens!), and my goal is to pair you with
+							your next PB-smashing race day shoes!</h4>
+						<br>
+						<h4>Join our community of runners and never miss a deal on your favorite running shoes again!</h4>
 					</div>
 				</div>
 			</div>
-			<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
-			        data-bs-slide="prev">
-				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-				<span class="visually-hidden">Previous</span>
-			</button>
-			<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
-			        data-bs-slide="next">
-				<span class="carousel-control-next-icon" aria-hidden="true"></span>
-				<span class="visually-hidden">Next</span>
-			</button>
 		</div>
 	</div>
 </section>

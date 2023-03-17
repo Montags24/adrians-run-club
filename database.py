@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 import smtplib
 import os
 
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///shoes.db"
 # Optional: But it will silence the deprecation warning in the console.
@@ -71,7 +70,8 @@ def db_add_row(entry):
 def db_return_homepage_shoes():
     """Return 6 random shoes with data for home page"""
     with app.app_context():
-        shoe_data = query_database(table=Shoe, query="all", size=10.0)
+        # shoe_data = query_database(table=Shoe, query="all", Shoe.discount < Shoe.price)
+        shoe_data = db.session.query(Shoe).filter(Shoe.discount < Shoe.price).filter(Shoe.size == 10.0).all()
         shoe_list = sample(shoe_data, 6)
         shoe_names = [query_database(table=Brand, query="first", id=shoe.brand_id) for shoe in shoe_list]
         zipped_list = list(zip(shoe_names, shoe_list))
@@ -98,7 +98,7 @@ def db_check_for_deals():
             deals = []
             email = user.email
             user_id = user.id
-        # loop through shoes in user_choice with user_id = id
+            # loop through shoes in user_choice with user_id = id
             shoes = query_database(table=UserChoice, query="all", user_id=user_id)
             for shoe in shoes:
                 name = shoe.shoe_name
@@ -109,7 +109,8 @@ def db_check_for_deals():
                 if db_shoe.discount < price:
                     deals.append([name, size, db_shoe.discount, db_shoe.deal_link])
                     # Update user shoe price to reflect new price, so they do not get emailed every day
-                    shoe_id = query_database(table=UserChoice, query="first", user_id=user_id, size=size, shoe_name=name).id
+                    shoe_id = query_database(table=UserChoice, query="first", user_id=user_id, size=size,
+                                             shoe_name=name).id
                     shoe_update = db.session.query(UserChoice).filter_by(id=shoe_id).first()
                     shoe_update.discount = db_shoe.discount
                     db.session.commit()

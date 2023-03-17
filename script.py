@@ -7,5 +7,5 @@ def daily_update():
     db_check_for_deals()
 
 
-# daily_update()
+daily_update()
 

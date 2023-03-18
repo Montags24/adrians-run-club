@@ -7,7 +7,7 @@ import smtplib
 import os
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://montags24:database123@montags24.mysql.pythonanywhere-services.com/montags24$shoe_data"
+# app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://"
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///shoes.db"
 # Optional: But it will silence the deprecation warning in the console.
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

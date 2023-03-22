@@ -7,7 +7,7 @@ import smtplib
 import os
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://montags24:database123@montags24.mysql.pythonanywhere-services.com/montags24$shoe_data"
+# app.config['SQLALCHEMY_DATABASE_URI'] = "mysql://montags24:database123@montags24.eu.mysql.pythonanywhere-services.com/montags24$shoe_data"
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///shoes.db"
 # Optional: But it will silence the deprecation warning in the console.
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -28,6 +28,7 @@ class Brand(db.Model):
 
 class Shoe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    colour = db.Column(db.String(100), nullable=False)
     size = db.Column(db.Float, nullable=False)
     price = db.Column(db.Integer, nullable=False)
     discount = db.Column(db.Integer, nullable=False)
@@ -139,6 +140,7 @@ def db_update_database():
         # Loop through data and store variable names
         for shoe in shoe_list:
             name = shoe["name"]
+            colour = shoe["colour"]
             size = float(shoe["size"])
             price = shoe["price"]
             discount = shoe["discount"]
@@ -150,20 +152,21 @@ def db_update_database():
                 # Check if shoe data exists in shoe table
                 brand_id = query_database(table=Brand, query="first", name=name).id
                 shoe = Shoe(size=size,
+                            colour=colour,
                             price=price,
                             discount=discount,
                             score=score,
                             img_link=img_link,
                             deal_link=deal_link,
                             brand_id=brand_id)
-                if query_database(table=Shoe, query="first", size=size, brand_id=brand_id) is not None:
+                if query_database(table=Shoe, query="first", size=size, colour=colour, brand_id=brand_id) is not None:
                     # Get shoe id
                     shoe_id = query_database(table=Shoe, query="first", size=size, brand_id=brand_id).id
                     # Find shoe entry based off unique id to update
                     shoe_update = db.session.query(Shoe).filter_by(id=shoe_id).first()
-                    # shoe_update = query_database(table=Shoe, query="first", id=shoe_id)
                     # Update shoe entry based off unique id
                     shoe_update.size = size
+                    shoe_update.colour = colour
                     shoe_update.price = price
                     shoe_update.discount = discount
                     shoe_update.score = score
@@ -179,6 +182,7 @@ def db_update_database():
                 db_add_row(brand)
                 brand_id = query_database(table=Brand, query="first", name=name).id
                 shoe = Shoe(size=size,
+                            colour=colour,
                             price=price,
                             discount=discount,
                             score=score,

@@ -7,5 +7,6 @@ def daily_update():
     db_check_for_deals()
 
 
-daily_update()
+if __name__ == "__main__":
+    daily_update()
 

@@ -61,6 +61,14 @@
 							</select>
 						</div>
 						<div class="col-md-3 col-sm-6 col-xs-6 my-3">
+							<div class="row"><h4>Select colour:</h4></div>
+							<select name="shoe" class="form-select" aria-label="Default select example">
+								{% for shoe in all_shoes: %}
+								<option value="{{  shoe  }}">{{ colour }}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<div class="col-md-2 col-sm-6 col-xs-6 my-3">
 							<div class="row"><h4>Select size:</h4></div>
 							<select name="size" class="form-select" aria-label="Default select example">
 								{% for size in sizes %}

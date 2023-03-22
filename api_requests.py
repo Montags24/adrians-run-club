@@ -33,15 +33,20 @@ def retrieve_data():
             response = requests.get(URL, params=parameters)
             data = response.json()
             for product in data["products"]:
-                shoe_data.append(
-                    {
-                        "name": product["name"],
-                        "size": size,
-                        "price": product["msrp"],
-                        "discount": product["min_price"],
-                        "score": product["score"],
-                        "img_link": product["default_color"]["image"]["url"].replace("{SIZE}", "600"),
-                        "deal_link": product["deals"][0]["affiliate_link"]
-                    }
-                )
+                for deal in product["deals"]:
+                    shoe_descriptor = deal["color"]["name"].split(" - ")
+                    name = shoe_descriptor[0]
+                    colour = shoe_descriptor[1].split(" (")[0]
+                    shoe_data.append(
+                        {
+                            "name": name,
+                            "colour": colour,
+                            "size": size,
+                            "price": product["msrp"],
+                            "discount": deal["price_local"],
+                            "score": product["score"],
+                            "img_link": deal["color"]["image"]["url"].replace("{SIZE}", "600"),
+                            "deal_link": deal["affiliate_link"]
+                        }
+                    )
     return shoe_data

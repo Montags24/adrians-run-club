@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, jsonify
 from flask_session import Session
+from flask_wtf import FlaskForm
+from wtforms import SelectField
 from dotenv import load_dotenv
 from database import Brand, Shoe, User, UserChoice, db_return_homepage_shoes, db_add_row, query_database, db, app as db_app
 from key_generator.key_generator import generate
-from sqlalchemy import delete
+from sqlalchemy import delete, asc
 from api_requests import sizes
 import smtplib
 import os
@@ -17,6 +19,12 @@ load_dotenv()
 GMAIL_EMAIL = os.getenv("GMAIL_RR_EMAIL")
 MY_PASSWORD = os.getenv("GMAIL_RR_PASSWORD")
 EMAIL = os.getenv("EMAIL")
+
+
+class Form(FlaskForm):
+    size = SelectField("size", choices=[(x/2, x/2) for x in range(6*2, 13*2)], render_kw={'class': 'form-select'})
+    brand = SelectField("brand", choices=[], render_kw={'class': 'form-select'})
+    colour = SelectField("colour", choices=[], render_kw={'class': 'form-select'})
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -46,40 +54,82 @@ def home():
 @app.route("/signup", methods=["GET", "POST"])
 def sign_up():
     """Sign up page for user to choose shoes and get alerts via email"""
-    # Get all shoe brand names in alphabetical order
-    shoe_brand_data = query_database(table=Brand, query="all")
-    all_shoes = sorted([shoe.name for shoe in shoe_brand_data])
-    if request.method == "POST":
-        # Check if user is adding shoe to cart or if deleting a shoe
-        if "form-submit" in request.form:
-            brand = request.form["shoe"]
-            size = float(request.form["size"])
-            # Create flask session
-            if "cart" not in session:
-                session["cart"] = []
-            cart_list = session["cart"]
-            brand_id = query_database(table=Brand, query="first", name=brand).id
-            shoe_data = query_database(table=Shoe, query="first", brand_id=brand_id, size=size)
-            # Check if shoe is in database, otherwise throw up error message
-            exist = query_database(table=Shoe, query="first", size=size, brand_id=brand_id) is not None
-            if shoe_data is not None:
+    with db_app.app_context():
+        form = Form()
+        form.brand.choices = [(brand.id, brand.name) for brand in Brand.query.distinct(Brand.name)
+                              .where(Shoe.size == 6.0)
+                              .where(Brand.id == Shoe.brand_id).order_by(asc(Brand.name))
+                              ]
+        first_brand_id = Brand.query.order_by(Brand.name.asc()).first().id
+        form.colour.choices = [(shoe.id, shoe.colour) for shoe in Shoe.query.distinct(Shoe.colour)
+                              .where(Shoe.size == 6.0)
+                              .where(Shoe.brand_id == first_brand_id).order_by(asc(Shoe.colour))
+                                ]
+        if request.method == "POST":
+            # Check if user is adding shoe to cart
+            if "form-submit" in request.form:
+                brand_id = request.form["brand"]
+                size = request.form["size"]
+                colour_id = request.form["colour"]
+                print(f"Brand: {brand}, size: {size}, colour: {colour}")
+                # Create flask session
+                if "cart" not in session:
+                    session["cart"] = []
+                cart_list = session["cart"]
+                # brand_id = query_database(table=Brand, query="first", name=brand).id
+                print(brand_id)
+                shoe_data = query_database(table=Shoe, query="first", id=colour_id)
                 cart_list.append({
-                    "name": brand,
+                    "name": Brand.query.filter_by(id=brand_id).first().name,
+                    "colour": colour,
                     "size": size,
                     "score": shoe_data.score,
                     "discount": shoe_data.discount,
                     "img_link": shoe_data.img_link,
                     "deal_link": shoe_data.deal_link,
                 })
-            return render_template("sign-up.html", shoes=session["cart"], all_shoes=all_shoes, sizes=sizes,
-                                   exist=exist)
-        elif "delete-btn" in request.form:
-            number = int(request.form["delete-btn"])
-            if len(session["cart"]) > 0:
-                del session["cart"][number - 1]
-        return render_template("sign-up.html", shoes=session["cart"], all_shoes=all_shoes, sizes=sizes, exist=True)
-    else:
-        return render_template("sign-up.html", all_shoes=all_shoes, sizes=sizes, exist=True)
+                return render_template("sign-up.html", shoes=session["cart"], form=form)
+            elif "delete-btn" in request.form:
+                number = int(request.form["delete-btn"])
+                if len(session["cart"]) > 0:
+                    del session["cart"][number - 1]
+            return render_template("sign-up.html", shoes=session["cart"], form=form)
+        return render_template("sign-up.html", form=form)
+
+    
+
+
+@app.route("/brand/<size>")
+def brand(size):
+    with db_app.app_context():
+        brands = Brand.query.where(Shoe.size == size).where(Brand.id == Shoe.brand_id).order_by(asc(Brand.name)).distinct()
+                
+        brand_array = []
+
+        for brand in brands:
+            brand_obj = {}
+            brand_obj["id"] = brand.id
+            brand_obj["name"] = brand.name
+            brand_array.append(brand_obj)
+
+        return jsonify({"brands": brand_array})
+    
+
+@app.route("/colour/<brand>/<size>")
+def colour(brand, size):
+    with db_app.app_context():
+        colours = Shoe.query.filter_by(size=size, brand_id=brand).group_by(Shoe.colour).order_by(asc(Shoe.colour)).distinct()
+
+        colour_array = []
+
+        for colour in colours:
+            colour_obj = {}
+            colour_obj["id"] = colour.id
+            colour_obj["colour"] = colour.colour
+            colour_array.append(colour_obj)
+        
+        return jsonify({"colours": colour_array})
+        
 
 
 @app.route("/signup/success", methods=["GET", "POST"])

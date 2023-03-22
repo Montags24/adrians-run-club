@@ -9,10 +9,10 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;900&family=Pacifico&display=swap"
-	      rel="stylesheet">
+		rel="stylesheet">
 	<!-- Bootstrap CSS -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-	      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 	<link rel="stylesheet" href="\static\css\styles.css">
 	<!--	<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">-->
 
@@ -21,161 +21,224 @@
 
 <body>
 
-<section id="navbar">
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		<div class="container">
-			<a class="navbar-brand" href="{{ url_for('home')  }}">Adrian's Run Club</a>
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-			        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarNav">
-				<ul class="navbar-nav">
-					<li class="nav-item">
-						<a class="nav-link active" aria-current="page" href="{{ url_for('home')  }}">Home</a>
-					</li>
-					<li class="nav-item">
-					<li class="nav-item">
-						<a class="nav-link" href="#">Sign Up</a>
-					</li>
-				</ul>
+	<section id="navbar">
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<div class="container">
+				<a class="navbar-brand" href="{{ url_for('home')  }}">Adrian's Run Club</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+					aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarNav">
+					<ul class="navbar-nav">
+						<li class="nav-item">
+							<a class="nav-link active" aria-current="page" href="{{ url_for('home')  }}">Home</a>
+						</li>
+						<li class="nav-item">
+						<li class="nav-item">
+							<a class="nav-link" href="#">Sign Up</a>
+						</li>
+					</ul>
+				</div>
 			</div>
-		</div>
-	</nav>
-</section>
+		</nav>
+	</section>
 
 
-<section id="top-section" style="height:70vh">
-	<div class="container">
-		<div class="row justify-content-center">
-			<h1 id="sign-up" class="text-pacifico" style="font-size:8vh">Choose your shoes!</h1>
-			<div class="col-md-10 col-sm-8 mt-3">
-				<form method="POST">
-					<div class="row justify-content-center">
-						<div class="col-md-3 col-sm-6 col-xs-6 my-3">
-							<div class="row"><h4>Select shoe:</h4></div>
-							<select name="shoe" class="form-select" aria-label="Default select example">
-								{% for shoe in all_shoes: %}
-								<option value="{{  shoe  }}">{{ shoe }}</option>
-								{% endfor %}
-							</select>
-						</div>
-						<div class="col-md-3 col-sm-6 col-xs-6 my-3">
-							<div class="row"><h4>Select colour:</h4></div>
-							<select name="shoe" class="form-select" aria-label="Default select example">
+	<section id="top-section" style="height:70vh">
+		<div class="container">
+			<div class="row justify-content-center">
+				<h1 id="sign-up" class="text-pacifico" style="font-size:8vh">Choose your shoes!</h1>
+				<div class="col-md-10 col-sm-8 mt-3">
+					<form method="POST">
+						{{ form.csrf_token }}
+						<div class="row justify-content-center">
+							<div class="col-md-2 col-sm-6 col-xs-6 my-3">
+								<div class="row">
+									<h4>Select size:</h4>
+								</div>
+								{{ form.size }}
+								<!--							<select name="size" class="form-select" aria-label="Default select example">-->
+								<!--								{% for size in sizes %}-->
+								<!--								<option value="{{  size  }}">{{ size }}</option>-->
+								<!--								{% endfor %}-->
+								<!--							</select>-->
+							</div>
+							<div class="col-md-3 col-sm-6 col-xs-6 my-3">
+								<div class="row">
+									<h4>Select shoe:</h4>
+								</div>
+								{{ form.brand }}
+								<!--							<select name="shoe" class="form-select" aria-label="Default select example">-->
+								<!--								{% for shoe in all_shoes: %}-->
+								<!--								<option value="{{  shoe  }}">{{ shoe }}</option>-->
+								<!--								{% endfor %}-->
+								<!--							</select>-->
+							</div>
+							<div class="col-md-3 col-sm-6 col-xs-6 my-3">
+								<div class="row">
+									<h4>Select colour:</h4>
+								</div>
+								{{ form.colour }}
+								<!-- <select name="shoe" class="form-select" aria-label="Default select example">
 								{% for shoe in all_shoes: %}
 								<option value="{{  shoe  }}">{{ colour }}</option>
 								{% endfor %}
-							</select>
+							</select> -->
+							</div>
+							<div class="col-md-1 col-sm-4 col-xs-6 my-3 d-flex align-items-end">
+								<button type="submit" id="form-submit" name="form-submit" value="submit"
+									class="btn btn-warning btn-rounded text-montserrat align-self-end"
+									style="font-weight: bold;">
+									Select
+								</button>
+							</div>
 						</div>
-						<div class="col-md-2 col-sm-6 col-xs-6 my-3">
-							<div class="row"><h4>Select size:</h4></div>
-							<select name="size" class="form-select" aria-label="Default select example">
-								{% for size in sizes %}
-								<option value="{{  size  }}">{{ size }}</option>
-								{% endfor %}
-							</select>
-						</div>
-						<div class="col-md-1 col-sm-4 col-xs-6 my-3 d-flex align-items-end">
-							<button type="submit" id="form-submit" name="form-submit" value="submit"
-							        class="btn btn-warning btn-rounded text-montserrat align-self-end"
-							        style="font-weight: bold;">
-								Select
-							</button>
-						</div>
-					</div>
-				</form>
-			</div>
-			{% if not exist: %}
+					</form>
+					<script>
+						let size_select = document.getElementById('size');
+						let brand_select = document.getElementById('brand');
+						let colour_select = document.getElementById('colour')
+
+						size_select.onchange = function () {
+							size = size_select.value;
+							fetch('/brand/' + size).then(function (response) {
+								response.json().then(function (data) {
+									let optionHTML = '';
+									for (let brand of data.brands) {
+										optionHTML += '<option value="' + brand.id + '">' + brand.name + '</option>';
+									}
+									brand_select.innerHTML = optionHTML;
+
+									// Fetch colours after brands are loaded
+									brand_select.onchange = function () {
+										brand = brand_select.value;
+										fetch('/colour/' + brand + '/' + size).then(function (response) {
+											response.json().then(function (data) {
+												let optionHTML = '';
+												for (let colour of data.colours) {
+													optionHTML += '<option value="' + colour.id + '">' + colour.colour + '</option>';
+												}
+												colour_select.innerHTML = optionHTML;
+											});
+										});
+									}
+
+									// Trigger the onchange event for the brand select to update colours initially
+									brand_select.onchange();
+								});
+							});
+						}
+						brand_select.onchange = function () {
+							size = size_select.value;
+							brand = brand_select.value;
+
+							fetch('/colour/' + brand + '/' + size).then(function (response) {
+
+								response.json().then(function (data) {
+									let optionHTML = '';
+
+									for (let colour of data.colours) {
+										optionHTML += '<option value="' + colour.id + '">' + colour.colour + '</option>';
+
+									}
+
+									colour_select.innerHTML = optionHTML;
+
+								});
+							});
+						}
+					</script>
+				</div>
+				<!-- {% if not exist: %}
 			<div class="alert alert-danger alert-dismissible fade show" style="width:auto;">
 				<strong>Error!</strong> That shoe and size does not exist in our database
 				<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 			</div>
-			{% endif %}
-			<div class="row justify-content-center">
-				{% for shoe in shoes %}
-				<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 text-center my-2">
-					<div class="card p-3 shadow-lg">
-						<div><strong>Reviews: {{ shoe['score'] }}% positive</strong></div>
-						<a href="{{ shoe['deal_link'] }}" target="_blank" class="shoe-link">
-							<img src="{{ shoe['img_link'] }}"
-							     class="card-img-top" alt="...">
-						</a>
-						<div class="card-body text-center">
+			{% endif %} -->
+				<div class="row justify-content-center">
+					{% for shoe in shoes %}
+					<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 text-center my-2">
+						<div class="card p-3 shadow-lg">
+							<div><strong>Reviews: {{ shoe['score'] }}% positive</strong></div>
+							<a href="{{ shoe['deal_link'] }}" target="_blank" class="shoe-link">
+								<img src="{{ shoe['img_link'] }}" class="card-img-top" alt="...">
+							</a>
+							<div class="card-body text-center">
+								<div class="row">
+									<h5 class="shoe-name">{{ shoe['name'] }}</h5>
+								</div>
+							</div>
 							<div class="row">
-								<h5 class="shoe-name">{{ shoe['name'] }}</h5>
+								<div class="col-6">
+									<p class="shoe-size text-montserrat" style="text-align:center;">{{ shoe['size'] }}
+										UK</p>
+								</div>
+								<div class="col-6">
+									<p class="shoe-discount text-montserrat" style="text-align:center;">£{{
+										shoe['discount']
+										}}</p>
+								</div>
 							</div>
-						</div>
-						<div class="row">
-							<div class="col-6">
-								<p class="shoe-size text-montserrat" style="text-align:center;">{{ shoe['size'] }}
-									UK</p>
+							<div class="row">
+								<form action="" method="POST">
+									<button type="submit" id="delete-btn" name="delete-btn" value="{{  loop.index  }}"
+										class="btn btn-danger">Delete
+									</button>
+								</form>
 							</div>
-							<div class="col-6">
-								<p class="shoe-discount text-montserrat" style="text-align:center;">£{{ shoe['discount']
-									}}</p>
-							</div>
-						</div>
-						<div class="row">
-							<form action="" method="POST">
-								<button type="submit" id="delete-btn" name="delete-btn" value="{{  loop.index  }}"
-								        class="btn btn-danger">Delete
-								</button>
-							</form>
 						</div>
 					</div>
+					{% endfor%}
 				</div>
-				{% endfor%}
 			</div>
 		</div>
-	</div>
-</section>
+	</section>
 
-<section id="email-alerts">
-	<div class="container">
-		<div class="row justify-content-center text-center my-5">
-			<h1 class="text-pacifico" style="font-size:8vh">Get alerts via email!</h1>
-			<form action="{{ url_for('sign_up_success') }}" method="POST">
-				<div class="my-5 d-flex justify-content-center">
-					<div class="form-floating">
-						<input name="email" type="email" class="form-control" id="email"
-						       placeholder="name@example.com" required style="width: 350px;">
-						<label for="email">Email address</label>
+	<section id="email-alerts">
+		<div class="container">
+			<div class="row justify-content-center text-center my-5">
+				<h1 class="text-pacifico" style="font-size:8vh">Get alerts via email!</h1>
+				<form action="{{ url_for('sign_up_success') }}" method="POST">
+					<div class="my-5 d-flex justify-content-center">
+						<div class="form-floating">
+							<input name="email" type="email" class="form-control" id="email"
+								placeholder="name@example.com" required style="width: 350px;">
+							<label for="email">Email address</label>
+						</div>
 					</div>
-				</div>
-				<button type="submit" value="submit" name="email-submit" id="email-submit"
-				        class="btn btn-warning btn-rounded text-montserrat"
-				        style="font-weight: bold;">Sign Up
-				</button>
-			</form>
+					<button type="submit" value="submit" name="email-submit" id="email-submit"
+						class="btn btn-warning btn-rounded text-montserrat" style="font-weight: bold;">Sign Up
+					</button>
+				</form>
+			</div>
 		</div>
-	</div>
-</section>
+	</section>
 
-<section>
-	<div class="container-fluid footer" style="height:20vh">
-		<footer class="pt-4">
-			<ul class="nav justify-content-center border-bottom pb-3 mb-3">
-				<li class="nav-item"><a href="/#top-section" class="nav-link px-2 text-montserrat">Home</a></li>
-				<li class="nav-item"><a href="/#middle-section" class="nav-link px-2 text-montserrat">About</a></li>
-				<li class="nav-item"><a href="/#bottom-section" class="nav-link px-2 text-montserrat">Deals</a></li>
-				<li class="nav-item"><a href="/#contact-me" class="nav-link px-2 text-montserrat">Contact</a></li>
-			</ul>
-			<p class="text-center text-montserrat">© 2023 Adrian's Run Club </p>
-		</footer>
-	</div>
-</section>
+	<section>
+		<div class="container-fluid footer" style="height:20vh">
+			<footer class="pt-4">
+				<ul class="nav justify-content-center border-bottom pb-3 mb-3">
+					<li class="nav-item"><a href="/#top-section" class="nav-link px-2 text-montserrat">Home</a></li>
+					<li class="nav-item"><a href="/#middle-section" class="nav-link px-2 text-montserrat">About</a></li>
+					<li class="nav-item"><a href="/#bottom-section" class="nav-link px-2 text-montserrat">Deals</a></li>
+					<li class="nav-item"><a href="/#contact-me" class="nav-link px-2 text-montserrat">Contact</a></li>
+				</ul>
+				<p class="text-center text-montserrat">© 2023 Adrian's Run Club </p>
+			</footer>
+		</div>
+	</section>
 
 
-<!-- Font is awesome -->
-<script src="https://kit.fontawesome.com/1f8ce701db.js" crossorigin="anonymous"></script>
-<!-- Optional JavaScript; choose one of the two! -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
-        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
-        crossorigin="anonymous"></script>
+	<!-- Font is awesome -->
+	<script src="https://kit.fontawesome.com/1f8ce701db.js" crossorigin="anonymous"></script>
+	<!-- Optional JavaScript; choose one of the two! -->
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+		integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+		integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+		crossorigin="anonymous"></script>
 </body>
 
 </html>

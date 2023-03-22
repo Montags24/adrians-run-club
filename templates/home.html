@@ -115,7 +115,7 @@
 	<div class="container">
 		<div class="row text-center">
 			<h1 class="mt-4 text-montserrat">Current Deals</h1>
-			<p class="muted">Size 10 UK</p>
+			<p class="muted">(Size 10 UK)</p>
 			{% for shoe in shoes %}
 			<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 my-2">
 				<div class="card p-3 shadow-lg" style="height:325px;">
@@ -136,10 +136,10 @@
 					</div>
 					<div class="row">
 						<div class="col-6 text-center" style="padding:5px;">
-							<p class="text-montserrat"><s>£{{ shoe[1].price }}</s></p>
+							<p class="text-montserrat shoe-price"><s>£{{ shoe[1].price }}</s></p>
 						</div>
 						<div class="col-6 text-center" style="padding:5px;">
-							<p class="text-montserrat"><strong>£{{ shoe[1].discount }}</strong></p>
+							<p class="text-montserrat shoe-discount"><strong>£{{ shoe[1].discount }}</strong></p>
 						</div>
 					</div>
 				</div>

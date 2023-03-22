@@ -9,6 +9,7 @@ import os
 app = Flask(__name__)
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("MY_SQL_ADDRESS")
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///shoes.db"
+app.config["SECRET_KEY"] = "secret"
 # Optional: But it will silence the deprecation warning in the console.
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -72,8 +73,8 @@ def db_add_row(entry):
 def db_return_homepage_shoes():
     """Return 6 random shoes with data for home page"""
     with app.app_context():
-        # shoe_data = query_database(table=Shoe, query="all", Shoe.discount < Shoe.price)
-        shoe_data = db.session.query(Shoe).filter(Shoe.discount < Shoe.price).filter(Shoe.size == 10.0).all()
+        # Return discounts that are more than 10%
+        shoe_data = Shoe.query.filter(Shoe.size == 10.0, Shoe.discount < 0.9 * Shoe.price).all()
         shoe_list = sample(shoe_data, 6)
         shoe_names = [query_database(table=Brand, query="first", id=shoe.brand_id) for shoe in shoe_list]
         zipped_list = list(zip(shoe_names, shoe_list))

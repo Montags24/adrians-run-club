@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+# from flask_app import app
 from api_requests import retrieve_data
 from random import sample
 from dotenv import load_dotenv
@@ -51,10 +52,9 @@ class User(db.Model):
 
 class UserChoice(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    shoe_name = db.Column(db.String(200), nullable=False)
-    size = db.Column(db.Float, nullable=False)
     discount = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    shoe_id = db.Column(db.Integer, db.ForeignKey("shoe.id"))
 
 
 def create_table():
@@ -93,36 +93,42 @@ def query_database(table, query, **kwargs):
 
 
 def db_check_for_deals():
-    """Emails users if shoe is on sale"""
+    """Emails users if shoe choices are on sale"""
     with app.app_context():
-        # loop through email in user table
+        # loop through users in database
         users = query_database(table=User, query="all")
         for user in users:
+            # Create empty list for deals
             deals = []
             email = user.email
             user_id = user.id
-            # loop through shoes in user_choice with user_id = id
+            # Retrieve all shoes from user's choices
             shoes = query_database(table=UserChoice, query="all", user_id=user_id)
             for shoe in shoes:
-                name = shoe.shoe_name
-                size = shoe.size
+                # Get price from when user signed up
                 price = shoe.discount
-                shoe_id = query_database(table=Brand, query="first", name=name).id
-                db_shoe = query_database(table=Shoe, query="first", brand_id=shoe_id, size=size)
+                # Query shoe database to compare prices
+                db_shoe = query_database(table=Shoe, query="first", id=shoe.shoe_id)
                 if db_shoe.discount < price:
-                    deals.append([name, size, db_shoe.discount, db_shoe.deal_link])
+                    deals.append({
+                        "name": Brand.query.filter_by(id=db_shoe.brand_id).first().name,
+                        "size": db_shoe.size,
+                        "discount": db_shoe.discount,
+                        "deal_link": db_shoe.deal_link,
+                    })
                     # Update user shoe price to reflect new price, so they do not get emailed every day
-                    shoe_id = query_database(table=UserChoice, query="first", user_id=user_id, size=size,
-                                             shoe_name=name).id
-                    shoe_update = db.session.query(UserChoice).filter_by(id=shoe_id).first()
+                    shoe_update = db.session.query(UserChoice).filter_by(shoe_id=db_shoe.id, user_id=user_id).first()
                     shoe_update.discount = db_shoe.discount
                     db.session.commit()
+            # Email user if shoes are on discount from when they signed up
             if len(deals) > 0:
+                # Get key as unique token so user can unsubscribe
                 key = query_database(table=User, query="first", email=email).key
                 subject = "Adrian's Run Club - Deal Alert!"
                 body = "The following shoes are on sale now!\n\n"
                 for deal in deals:
-                    body += f"{deal[0]} size {deal[1]} is on discount for {deal[2]} GBP. Get it now at {deal[3]}\n"
+                    body += f"{deal['name']} size {deal['size']} is on discount for {deal['discount']} GBP." \
+                            f" Get it now at {deal['deal_link']}\n"
                 body += f"\nUnsubscribe at the following link: www.adriansrunclub.co.uk/unsubscribe/{key}"
                 with smtplib.SMTP("smtp.gmail.com") as connection:
                     connection.starttls()

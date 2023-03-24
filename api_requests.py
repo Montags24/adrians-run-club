@@ -11,6 +11,7 @@ sizes = {size * 0.5: run_repeat_start_size + i for i, size in enumerate(range(mi
 
 def change_parameters(size, page, page_range):
     size_parameters = {
+        'accept-language': 'en-GB',
         "from": page_range,
         "size": 30,
         "filter[]": [1, 6214, 16078, sizes[size]],  # 6214 - Running shoes, 16078 Competition running shoes

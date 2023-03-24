@@ -13,6 +13,8 @@ Adrian's Run Club will scrape the website RunRepeat for its competitive shoes an
 - Git for version control
 - Deployed on PythonAnywhere using a MySQL database
 
+## Entity Relationship Diagram
+![ERD](https://github.com/montags24/adrians-run-club/blob/main/static/images/ERD.PNG?raw=true)
 
 ## Problems faced and lessons learned
 ### Web scraping

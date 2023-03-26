@@ -4,13 +4,11 @@ from flask_wtf import FlaskForm
 from wtforms import SelectField
 from dotenv import load_dotenv
 from database import Brand, Shoe, User, UserChoice, db_return_homepage_shoes, db_add_row, query_database, db, app
-# app as app
 from key_generator.key_generator import generate
 from sqlalchemy import delete, asc
 import smtplib
 import os
 
-# app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
@@ -20,16 +18,9 @@ MY_PASSWORD = os.getenv("GMAIL_RR_PASSWORD")
 EMAIL = os.getenv("EMAIL")
 
 
-class Form(FlaskForm):
-    size = SelectField("size", choices=[(x / 2, x / 2) for x in range(6 * 2, 13 * 2)],
-                       render_kw={'class': 'form-select'})
-    brand = SelectField("brand", choices=[], render_kw={'class': 'form-select'})
-    colour = SelectField("colour", choices=[], render_kw={'class': 'form-select'})
-
-
+# Index
 @app.route("/", methods=["GET", "POST"])
 def home():
-    """Homepage for Adrian's Run Club"""
     if request.method == "GET":
         return render_template("home.html", shoes=db_return_homepage_shoes())
     else:
@@ -51,9 +42,17 @@ def home():
         return render_template("message-success.html")
 
 
+# Shoe Form Class
+class Form(FlaskForm):
+    size = SelectField("size", choices=[(x / 2, x / 2) for x in range(6 * 2, 13 * 2)],
+                       render_kw={'class': 'form-select'})
+    brand = SelectField("brand", choices=[], render_kw={'class': 'form-select'})
+    colour = SelectField("colour", choices=[], render_kw={'class': 'form-select'})
+
+
+# User sign-up
 @app.route("/signup", methods=["GET", "POST"])
 def sign_up():
-    """Sign up page for user to choose shoes and get alerts via email"""
     with app.app_context():
         form = Form()
         form.brand.choices = [(brand_form.id, brand_form.name) for brand_form in Brand.query.distinct(Brand.name).where(
@@ -94,6 +93,7 @@ def sign_up():
         return render_template("sign-up.html", form=form)
 
 
+# JS route for dynamic drop down
 @app.route("/brand/<size>")
 def brand(size):
     with app.app_context():
@@ -109,6 +109,7 @@ def brand(size):
         return jsonify({"brands": brand_array})
 
 
+# JS route for dynamic drop down
 @app.route("/colour/<brand>/<size>")
 def colour(brand, size):
     with app.app_context():
@@ -124,12 +125,11 @@ def colour(brand, size):
         return jsonify({"colours": colour_array})
 
 
+# Add user to database, generate welcome email
 @app.route("/signup/success", methods=["GET", "POST"])
 def sign_up_success():
-    """Add user email and shoe choices to database"""
     if request.method == "POST":
         email = request.form["email"]
-        print(email)
         # Generate random token to allow user to unsubscribe
         key = generate(5, '-', 3, 3, type_of_value='hex', capital='none').get_key()
         # Generate data from user cart to put into database
@@ -168,6 +168,7 @@ def sign_up_success():
         return render_template("sign-up-success.html")
 
 
+# Unsubscribe
 @app.route("/unsubscribe/<token>", methods=["GET", "POST"])
 def unsubscribe(token):
     if request.method == "GET":

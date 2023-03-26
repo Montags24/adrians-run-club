@@ -62,7 +62,6 @@ def sign_up():
 
         form.colour.choices = [(shoe.id, shoe.colour) for shoe in Shoe.query.distinct(Shoe.colour).where(
             Shoe.size == 6.0).where(Shoe.brand_id == first_brand_id).order_by(asc(Shoe.colour))]
-
         if request.method == "POST":
             # Check if user is adding shoe to cart
             if "form-submit" in request.form:
@@ -73,7 +72,6 @@ def sign_up():
                 if "cart" not in session:
                     session["cart"] = []
                 cart_list = session["cart"]
-                # brand_id = query_database(table=Brand, query="first", name=brand).id
                 shoe_data = query_database(table=Shoe, query="first", id=shoe_id)
                 cart_list.append({
                     "name": Brand.query.filter_by(id=brand_id).first().name,
@@ -85,12 +83,14 @@ def sign_up():
                     "deal_link": shoe_data.deal_link,
                     "id": shoe_data.id
                 })
+                form.colour.choices = [(shoe.id, shoe.colour) for shoe in Shoe.query.distinct(Shoe.colour).where(
+                    Shoe.size == size).where(Shoe.brand_id == brand_id).order_by(asc(Shoe.colour))]
                 return render_template("sign-up.html", shoes=session["cart"], form=form)
             elif "delete-btn" in request.form:
                 number = int(request.form["delete-btn"])
                 if len(session["cart"]) > 0:
                     del session["cart"][number - 1]
-            return render_template("sign-up.html", shoes=session["cart"], form=form)
+                return render_template("sign-up.html", shoes=session["cart"], form=form)
         return render_template("sign-up.html", form=form)
 
 

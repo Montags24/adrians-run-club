@@ -44,7 +44,6 @@
 		</nav>
 	</section>
 
-
 	<section id="top-section" style="height:70vh">
 		<div class="container">
 			<div class="row justify-content-center">
@@ -55,36 +54,21 @@
 						<div class="row justify-content-center">
 							<div class="col-md-2 col-sm-6 col-xs-6 my-3">
 								<div class="row">
-									<h4>Select size:</h4>
+									<h4>Size:</h4>
 								</div>
 								{{ form.size }}
-								<!--							<select name="size" class="form-select" aria-label="Default select example">-->
-								<!--								{% for size in sizes %}-->
-								<!--								<option value="{{  size  }}">{{ size }}</option>-->
-								<!--								{% endfor %}-->
-								<!--							</select>-->
 							</div>
 							<div class="col-md-3 col-sm-6 col-xs-6 my-3">
 								<div class="row">
-									<h4>Select shoe:</h4>
+									<h4>Shoe:</h4>
 								</div>
 								{{ form.brand }}
-								<!--							<select name="shoe" class="form-select" aria-label="Default select example">-->
-								<!--								{% for shoe in all_shoes: %}-->
-								<!--								<option value="{{  shoe  }}">{{ shoe }}</option>-->
-								<!--								{% endfor %}-->
-								<!--							</select>-->
 							</div>
 							<div class="col-md-3 col-sm-6 col-xs-6 my-3">
 								<div class="row">
-									<h4>Select colour:</h4>
+									<h4>Colourway:</h4>
 								</div>
 								{{ form.colour }}
-								<!-- <select name="shoe" class="form-select" aria-label="Default select example">
-								{% for shoe in all_shoes: %}
-								<option value="{{  shoe  }}">{{ colour }}</option>
-								{% endfor %}
-							</select> -->
 							</div>
 							<div class="col-md-1 col-sm-4 col-xs-6 my-3 d-flex align-items-end">
 								<button type="submit" id="form-submit" name="form-submit" value="submit"
@@ -150,19 +134,13 @@
 						}
 					</script>
 				</div>
-				<!-- {% if not exist: %}
-			<div class="alert alert-danger alert-dismissible fade show" style="width:auto;">
-				<strong>Error!</strong> That shoe and size does not exist in our database
-				<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-			</div>
-			{% endif %} -->
 				<div class="row justify-content-center">
 					{% for shoe in shoes %}
 					<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 text-center my-2">
 						<div class="card p-3 shadow-lg">
 							<div><strong>Reviews: {{ shoe['score'] }}% positive</strong></div>
 							<a href="{{ shoe['deal_link'] }}" target="_blank" class="shoe-link">
-								<img src="{{ shoe['img_link'] }}" class="card-img-top" alt="...">
+								<img src="{{ shoe['img_link'] }}" class="card-img-top" alt="{{ shoe['name'] }}">
 							</a>
 							<div class="card-body text-center">
 								<div class="row">

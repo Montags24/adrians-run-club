@@ -1,6 +1,5 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-# from flask_app import app
 from api_requests import retrieve_data
 from random import sample
 from dotenv import load_dotenv
@@ -34,6 +33,7 @@ class Shoe(db.Model):
     size = db.Column(db.Float, nullable=False)
     price = db.Column(db.Integer, nullable=False)
     discount = db.Column(db.Integer, nullable=False)
+    country = db.Column(db.String(20), nullable=False)
     score = db.Column(db.Integer, nullable=False)
     img_link = db.Column(db.String(200), nullable=False)
     deal_link = db.Column(db.String(200), nullable=False)
@@ -140,9 +140,9 @@ def db_check_for_deals():
                     )
 
 
-def db_update_database():
+def db_update_database(region):
     # Get data from api_requests module
-    shoe_list = retrieve_data()
+    shoe_list = retrieve_data(region)
     with app.app_context():
         # Loop through data and store variable names
         for shoe in shoe_list:
@@ -150,24 +150,25 @@ def db_update_database():
             colour = shoe["colour"]
             size = float(shoe["size"])
             price = shoe["price"]
+            country = shoe["country"]
             discount = shoe["discount"]
             score = shoe["score"]
             img_link = shoe["img_link"]
             deal_link = shoe["deal_link"]
             # Check if shoe model exists in brand table
             if query_database(table=Brand, query="first", name=name) is not None:
-                # Check if shoe data exists in shoe table
                 brand_id = query_database(table=Brand, query="first", name=name).id
                 shoe = Shoe(size=size,
                             colour=colour,
                             price=price,
+                            country=country,
                             discount=discount,
                             score=score,
                             img_link=img_link,
                             deal_link=deal_link,
                             brand_id=brand_id)
+                # Check if shoe data exists in shoe table
                 if query_database(table=Shoe, query="first", size=size, colour=colour, brand_id=brand_id) is not None:
-                    # Get shoe id
                     shoe_id = query_database(table=Shoe, query="first", size=size, brand_id=brand_id).id
                     # Find shoe entry based off unique id to update
                     shoe_update = db.session.query(Shoe).filter_by(id=shoe_id).first()
@@ -175,6 +176,7 @@ def db_update_database():
                     shoe_update.size = size
                     shoe_update.colour = colour
                     shoe_update.price = price
+                    shoe_update.country = country
                     shoe_update.discount = discount
                     shoe_update.score = score
                     shoe_update.img_link = img_link
@@ -191,6 +193,7 @@ def db_update_database():
                 shoe = Shoe(size=size,
                             colour=colour,
                             price=price,
+                            country=country,
                             discount=discount,
                             score=score,
                             img_link=img_link,

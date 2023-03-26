@@ -11,7 +11,6 @@ sizes = {size * 0.5: run_repeat_start_size + i for i, size in enumerate(range(mi
 
 def change_parameters(size, page, page_range):
     size_parameters = {
-        'accept-language': 'en-GB',
         "from": page_range,
         "size": 30,
         "filter[]": [1, 6214, 16078, sizes[size]],  # 6214 - Running shoes, 16078 Competition running shoes
@@ -24,14 +23,15 @@ def change_parameters(size, page, page_range):
     return size_parameters
 
 
-def retrieve_data():
+def retrieve_data(region):
     """Function that uses RunRepeat API to return data on competitive running shoes"""
     shoe_data = []
+    headers = {"rr-country": region}
     for size in sizes:
         # Run loop 3 times to get up to 90 shoes worth of data
         for i in range(3):
             parameters = change_parameters(size, i + 1, 30 * i)
-            response = requests.get(URL, params=parameters)
+            response = requests.get(URL, headers=headers, params=parameters)
             data = response.json()
             for product in data["products"]:
                 for deal in product["deals"]:
@@ -45,6 +45,7 @@ def retrieve_data():
                             "size": size,
                             "price": product["msrp"],
                             "discount": deal["price_local"],
+                            "country": country,
                             "score": product["score"],
                             "img_link": deal["color"]["image"]["url"].replace("{SIZE}", "600"),
                             "deal_link": deal["affiliate_link"]

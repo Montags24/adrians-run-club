@@ -55,12 +55,11 @@ class Form(FlaskForm):
 def sign_up():
     with app.app_context():
         form = Form()
-        form.brand.choices = [(brand_form.id, brand_form.name) for brand_form in Brand.query.distinct(Brand.name).where(
-            Shoe.size == 6.0).where(Brand.id == Shoe.brand_id).order_by(asc(Brand.name))]
-        first_brand_id = Brand.query.order_by(Brand.name.asc()).first().id
-
+        brands = Brand.query.distinct(Brand.name).join(Shoe).filter(Shoe.size == 6.0).order_by(Brand.name.asc()).all()
+        form.brand.choices = [(brand_form.id, brand_form.name) for brand_form in brands]
+        first_brand_id = form.brand.choices[0][0]
         form.colour.choices = [(shoe.id, shoe.colour) for shoe in Shoe.query.distinct(Shoe.colour).where(
-            Shoe.size == 6.0).where(Shoe.brand_id == first_brand_id).order_by(asc(Shoe.colour))]
+            Shoe.size == 6.0).where(Shoe.brand_id == first_brand_id)]
         if request.method == "POST":
             # Check if user is adding shoe to cart
             if "form-submit" in request.form:
@@ -82,6 +81,9 @@ def sign_up():
                     "deal_link": shoe_data.deal_link,
                     "id": shoe_data.id
                 })
+                form.brand.choices = [(brand_form.id, brand_form.name) for brand_form in
+                                      Brand.query.distinct(Brand.name).where(
+                                          Shoe.size == size).where(Brand.id == Shoe.brand_id).order_by(asc(Brand.name))]
                 form.colour.choices = [(shoe.id, shoe.colour) for shoe in Shoe.query.distinct(Shoe.colour).where(
                     Shoe.size == size).where(Shoe.brand_id == brand_id).order_by(asc(Shoe.colour))]
                 return render_template("sign-up.html", shoes=session["cart"], form=form)

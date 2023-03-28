@@ -1,5 +1,6 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql.expression import func
 from api_requests import retrieve_data
 from random import sample
 from dotenv import load_dotenv
@@ -73,12 +74,15 @@ def db_add_row(entry):
 def db_return_homepage_shoes():
     """Return 6 random shoes with data for home page"""
     with app.app_context():
-        # Return discounts that are more than 10%
-        shoe_data = Shoe.query.filter(Shoe.size == 10.0, Shoe.discount < 0.9 * Shoe.price).all()
-        shoe_list = sample(shoe_data, 6)
-        shoe_names = [query_database(table=Brand, query="first", id=shoe.brand_id) for shoe in shoe_list]
-        zipped_list = list(zip(shoe_names, shoe_list))
-        return zipped_list
+        shoe_data = db.session.query(Brand.name, Shoe.colour, Shoe.size, Shoe.price,
+                                     Shoe.discount, Shoe.score, Shoe.img_link, Shoe.deal_link) \
+            .join(Shoe, Brand.id == Shoe.brand_id) \
+            .filter(Shoe.size == 10.0, Shoe.discount < 0.9 * Shoe.price,
+                    Shoe.country == "GB") \
+            .order_by(func.random()) \
+            .limit(6) \
+            .all()
+        return shoe_data
 
 
 def query_database(table, query, **kwargs):

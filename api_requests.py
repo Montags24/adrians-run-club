@@ -45,7 +45,7 @@ def retrieve_data(region):
                             "size": size,
                             "price": product["msrp"],
                             "discount": deal["price_local"],
-                            "country": country,
+                            "country": region,
                             "score": product["score"],
                             "img_link": deal["color"]["image"]["url"].replace("{SIZE}", "600"),
                             "deal_link": deal["affiliate_link"]

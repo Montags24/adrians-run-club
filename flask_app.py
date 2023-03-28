@@ -1,11 +1,11 @@
-from flask import render_template, request, session, jsonify
+from flask import jsonify, render_template, request, session
 from flask_session import Session
 from flask_wtf import FlaskForm
 from wtforms import SelectField
+from sqlalchemy import asc, delete
 from dotenv import load_dotenv
-from database import Brand, Shoe, User, UserChoice, db_return_homepage_shoes, db_add_row, query_database, db, app
+from database import Brand, Shoe, User, UserChoice, db, db_add_row, db_return_homepage_shoes, query_database, app
 from key_generator.key_generator import generate
-from sqlalchemy import delete, asc
 import smtplib
 import os
 
@@ -31,6 +31,7 @@ def home():
         message = request.form["message"]
         subject = f"Adrian's Run Club - You have a new message from {name}!"
         body = f"Name: {name}\nPhone number: {phone_number}\nEmail: {email}\nMessage: {message}"
+
         with smtplib.SMTP("smtp.gmail.com") as connection:
             connection.starttls()
             connection.login(user=GMAIL_EMAIL, password=MY_PASSWORD)
@@ -39,6 +40,7 @@ def home():
                 to_addrs=EMAIL,
                 msg=f"Subject: {subject}\n\n{body}"
             )
+
         return render_template("message-success.html")
 
 
@@ -55,21 +57,26 @@ class Form(FlaskForm):
 def sign_up():
     with app.app_context():
         form = Form()
+
         brands = Brand.query.distinct(Brand.name).join(Shoe).filter(Shoe.size == 6.0).order_by(Brand.name.asc()).all()
         form.brand.choices = [(brand_form.id, brand_form.name) for brand_form in brands]
         first_brand_id = form.brand.choices[0][0]
+
         form.colour.choices = [(shoe.id, shoe.colour) for shoe in Shoe.query.distinct(Shoe.colour).where(
             Shoe.size == 6.0).where(Shoe.brand_id == first_brand_id)]
+
         if request.method == "POST":
             # Check if user is adding shoe to cart
             if "form-submit" in request.form:
                 brand_id = request.form["brand"]
                 size = request.form["size"]
                 shoe_id = request.form["colour"]
+
                 # Create flask session
                 if "cart" not in session:
                     session["cart"] = []
                 cart_list = session["cart"]
+
                 shoe_data = query_database(table=Shoe, query="first", id=shoe_id)
                 cart_list.append({
                     "name": Brand.query.filter_by(id=brand_id).first().name,
@@ -81,17 +88,23 @@ def sign_up():
                     "deal_link": shoe_data.deal_link,
                     "id": shoe_data.id
                 })
+
                 form.brand.choices = [(brand_form.id, brand_form.name) for brand_form in
                                       Brand.query.distinct(Brand.name).where(
                                           Shoe.size == size).where(Brand.id == Shoe.brand_id).order_by(asc(Brand.name))]
+
                 form.colour.choices = [(shoe.id, shoe.colour) for shoe in Shoe.query.distinct(Shoe.colour).where(
                     Shoe.size == size).where(Shoe.brand_id == brand_id).order_by(asc(Shoe.colour))]
+
                 return render_template("sign-up.html", shoes=session["cart"], form=form)
+
             elif "delete-btn" in request.form:
                 number = int(request.form["delete-btn"])
                 if len(session["cart"]) > 0:
                     del session["cart"][number - 1]
+
                 return render_template("sign-up.html", shoes=session["cart"], form=form)
+
         return render_template("sign-up.html", form=form)
 
 
@@ -151,6 +164,7 @@ def sign_up_success():
             for shoe in user_shoes:
                 body += f"{shoe['name']} in size {shoe['size']} with colourway {shoe['colour']}\n"
             body += "\nPlease don't forget to mark this address as safe to receive future emails!"
+
             with smtplib.SMTP("smtp.gmail.com") as connection:
                 connection.starttls()
                 connection.login(user=GMAIL_EMAIL, password=MY_PASSWORD)
@@ -159,6 +173,7 @@ def sign_up_success():
                     to_addrs=email,
                     msg=f"Subject: {subject}\n\n{body.encode('ascii', 'ignore').decode('ascii')}"
                 )
+
         user_id = query_database(table=User, query="first", email=email).id
         for shoe in user_shoes:
             user_choice = UserChoice(discount=shoe['discount'],

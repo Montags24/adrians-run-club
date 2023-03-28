@@ -120,26 +120,26 @@
 			<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 my-2">
 				<div class="card p-3 shadow-lg" style="height:325px;">
 					<div class="row">
-						<div class="circle-singleline"><strong>Reviews: {{ shoe[1].score }}% positive</strong></div>
+						<div class="circle-singleline"><strong>Reviews: {{ shoe.score }}% positive</strong></div>
 					</div>
 					<div class="row">
-						<a href="{{ shoe[1].deal_link }}" class="shoe-link" target="_blank"><img
-								src="{{ shoe[1].img_link }}"
+						<a href="{{ shoe.deal_link }}" class="shoe-link" target="_blank"><img
+								src="{{ shoe.img_link }}"
 								class="card-img-top mt-3" alt="..." style="height:120px;"></a>
 					</div>
 					<div class="row">
 						<div class="card-body" style="height:90px;">
 							<div class="row text-center">
-								<h5 class="shoe-name">{{ shoe[0].name }}</h5>
+								<h5 class="shoe-name">{{ shoe.name }}</h5>
 							</div>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-6 text-center" style="padding:5px;">
-							<p class="text-montserrat shoe-price"><s>£{{ shoe[1].price }}</s></p>
+							<p class="text-montserrat shoe-price"><s>£{{ shoe.price }}</s></p>
 						</div>
 						<div class="col-6 text-center" style="padding:5px;">
-							<p class="text-montserrat shoe-discount"><strong>£{{ shoe[1].discount }}</strong></p>
+							<p class="text-montserrat shoe-discount"><strong>£{{ shoe.discount }}</strong></p>
 						</div>
 					</div>
 				</div>
